@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="task_item_margins">40dp</dimen>
+    <dimen name="common_corner_radius">4dp</dimen>
+    <dimen name="common_image_button">35dp</dimen>
+</resources>

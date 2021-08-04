@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/taskView">
+
+    <fragment
+        android:id="@+id/taskView"
+        android:name="com.example.dankbrowser.task_view.TaskViewFragment"
+        android:label="fragment_task_view"
+        tools:layout="@layout/fragment_task_view" >
+        <action
+            android:id="@+id/action_taskView_to_geckoFragment"
+            app:destination="@id/geckoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/geckoFragment"
+        android:name="com.example.dankbrowser.gecko_fragment.GeckoFragment"
+        android:label="fragment_gecko"
+        tools:layout="@layout/fragment_gecko" />
+
+</navigation>
