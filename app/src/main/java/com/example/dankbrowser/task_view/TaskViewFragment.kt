@@ -1,9 +1,9 @@
 package com.example.dankbrowser.task_view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,12 +12,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.FragmentTaskViewBinding
 import com.example.dankbrowser.hideKeyboard
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
 
     private val viewModel: TaskViewViewModel by viewModels()

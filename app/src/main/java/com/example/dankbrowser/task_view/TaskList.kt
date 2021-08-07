@@ -6,9 +6,8 @@ import com.example.dankbrowser.task_view.models.Task
 import com.example.dankbrowser.task_view.models.rv_types.RVItem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import javax.inject.Inject
 
-class TaskList @Inject constructor() : ITaskListRVBindings {
+class TaskList() : ITaskListRVBindings {
     override var list = mutableListOf<Task>()
     private lateinit var dataChangeCallback: () -> Unit
     private val selectedTab = MutableSharedFlow<Tab>(1, 1)

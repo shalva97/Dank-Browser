@@ -2,22 +2,18 @@ package com.example.dankbrowser.task_view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.navigation.fragment.findNavController
 import com.example.dankbrowser.R
 import com.example.dankbrowser.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import javax.inject.Inject
 
-@HiltViewModel
-class TaskViewViewModel @Inject constructor(
+class TaskViewViewModel(
     application: Application,
-    private val taskList: TaskList
 ) : AndroidViewModel(application) {
 
     val navigation = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+    private val taskList: TaskList = TaskList()
 
     fun addTask(taskName: String) {
         taskList.addTask(taskName)
