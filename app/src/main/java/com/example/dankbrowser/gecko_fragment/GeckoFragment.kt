@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.FragmentGeckoBinding
 import kotlinx.coroutines.flow.collect
@@ -18,7 +19,9 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
     private val viewModel: GeckoViewModel by viewModels()
 
-    private var geckoRuntime: GeckoRuntime = GeckoRuntime.create(requireContext())
+    private val geckoRuntime: GeckoRuntime by lazy {
+        (requireContext().applicationContext as DankApplication).components.geckoEngine
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,8 +31,7 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
         session1.open(geckoRuntime)
 
-        with(binding)
-        {
+        with(binding) {
             browserGV.setSession(session1)
         }
 
@@ -37,7 +39,12 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.loadUrlAction.collect {
                     session1.loadUri(it.url)
+                }
+            }
+        }
 
+    }
+}
 
 //        val session2 = GeckoSession(
 //            GeckoSessionSettings.Builder()
@@ -49,9 +56,3 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 //        }
 //
 //
-                }
-            }
-        }
-
-    }
-}

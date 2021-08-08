@@ -3,6 +3,7 @@ package com.example.dankbrowser.task_view
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.dankbrowser.R
+import com.example.dankbrowser.components
 import com.example.dankbrowser.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
@@ -13,7 +14,7 @@ class TaskViewViewModel(
 ) : AndroidViewModel(application) {
 
     val navigation = MutableSharedFlow<Int>(extraBufferCapacity = 1)
-    private val taskList: TaskList = TaskList()
+    private val taskList: TaskList = components.taskList
 
     fun addTask(taskName: String) {
         taskList.addTask(taskName)
