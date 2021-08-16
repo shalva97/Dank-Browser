@@ -1,8 +1,8 @@
 package com.example.dankbrowser
 
+import com.example.dankbrowser.task_view.TaskList
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
-import com.example.dankbrowser.task_view.TaskList
 import org.junit.Test
 
 
@@ -10,14 +10,14 @@ class TaskListGetItemCountTest {
 
     @Test
     fun `return zero if no tasks are created`() {
-        val taskList = TaskList()
+        val taskList = TaskList(tasksDB.tasks())
 
         assert(taskList.getItemCount() == 0)
     }
 
     @Test
     fun `total number of rv items`() {
-        val taskList = TaskList()
+        val taskList = TaskList(tasksDB.tasks())
 
         taskList.list.addAll(
             listOf(
@@ -33,7 +33,7 @@ class TaskListGetItemCountTest {
 
     @Test
     fun `more tab number tests`() {
-        val taskList = TaskList()
+        val taskList = TaskList(tasksDB.tasks())
 
         taskList.list.addAll(
             listOf(
@@ -54,7 +54,7 @@ class TaskListGetItemCountTest {
 
     @Test
     fun `even more tab number tests`() {
-        val taskList = TaskList()
+        val taskList = TaskList(tasksDB.tasks())
 
         taskList.list.addAll(
             listOf(

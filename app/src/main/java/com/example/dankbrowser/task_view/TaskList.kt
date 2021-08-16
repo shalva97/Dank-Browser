@@ -1,16 +1,33 @@
 package com.example.dankbrowser.task_view
 
+import com.example.dankbrowser.data.TabEntity
+import com.example.dankbrowser.data.TaskEntity
+import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
 import com.example.dankbrowser.task_view.models.rv_types.RVItem
+import io.realm.RealmList
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class TaskList() : ITaskListRVBindings {
+class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings {
     override var list = mutableListOf<Task>()
     private lateinit var dataChangeCallback: () -> Unit
     private val selectedTab = MutableSharedFlow<Tab>(1, 1)
+
+    init {
+        val results = taskRepository.getAll()
+
+        results.onEach {
+            it.forEach { task ->
+                list.add(task)
+            }
+        }.launchIn(GlobalScope)
+    }
 
     override fun getItemCount(): Int {
         val tabCount = list.map { it.tabsList }.flatten().size
@@ -27,11 +44,18 @@ class TaskList() : ITaskListRVBindings {
     }
 
     fun addTask(taskName: String) {
-        list.add(
-            Task(taskName, "default").apply {
-                addTab(Tab("http://youtube.com", contextId, "Blank Tab"))
-            },
+        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
+        val taskEntity = TaskEntity(
+            taskName,
+            "default",
+            RealmList(
+                TabEntity("http://youtube.com", contextId = "default", "Blank Tab")
+            )
         )
+
+        taskRepository.addTask(taskEntity)
+
+        list.add(taskEntity.toTask())
         onDataChanged()
     }
 
@@ -40,15 +64,17 @@ class TaskList() : ITaskListRVBindings {
     }
 
     fun deleteTask(task: Task) {
+        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
+        taskRepository.deleteTask(task)
         list.remove(task)
         onDataChanged()
     }
 
-    fun addTab() {
+    fun addTab(task: Task) {
 
     }
 
-    fun removeTab() {
+    fun removeTab(task: Task, tab: Tab) {
 
     }
 

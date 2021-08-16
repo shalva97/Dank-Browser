@@ -9,7 +9,7 @@ class TaskListGetItemTypeTest {
 
     @Test
     fun `first item is task name`() {
-        val tasks = TaskList()
+        val tasks = TaskList(tasksDB.tasks())
 
         tasks.list.addAll(
             listOf(
@@ -27,7 +27,7 @@ class TaskListGetItemTypeTest {
 
     @Test
     fun `if task is empty then it should show new tab button`() {
-        val tasks = TaskList()
+        val tasks = TaskList(tasksDB.tasks())
 
         tasks.list.addAll(
             listOf(
@@ -42,7 +42,7 @@ class TaskListGetItemTypeTest {
 
     @Test
     fun `given a task with 1 tab then it should return a tab at index 1`() {
-        val tasks = TaskList()
+        val tasks = TaskList(tasksDB.tasks())
 
         tasks.list.addAll(
             listOf(
@@ -59,7 +59,7 @@ class TaskListGetItemTypeTest {
 
     @Test
     fun `given a task with 1 tab then it should return a new tab button at index 2`() {
-        val tasks = TaskList()
+        val tasks = TaskList(tasksDB.tasks())
 
         tasks.list.addAll(
             listOf(
@@ -77,7 +77,7 @@ class TaskListGetItemTypeTest {
     @Test
     fun `test correct items for more than one task`() {
 
-        val tasks = TaskList()
+        val tasks = TaskList(tasksDB.tasks())
 
         tasks.list.addAll(
             listOf(

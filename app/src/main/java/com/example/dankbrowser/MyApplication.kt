@@ -2,7 +2,9 @@ package com.example.dankbrowser
 
 import android.app.Application
 import android.content.Context
+import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.task_view.TaskList
+import io.realm.Realm
 import org.mozilla.geckoview.GeckoRuntime
 
 class DankApplication : Application() {
@@ -13,11 +15,21 @@ class DankApplication : Application() {
 
 class Components(context: Context) {
 
+    init {
+        Realm.init(context)
+    }
+
     val geckoEngine by lazy {
         GeckoRuntime.create(context)
     }
 
-    val taskList by lazy {
-        TaskList()
+    val realmDatabase by lazy {
+        TaskRepository()
     }
+
+    val taskList by lazy {
+        TaskList(realmDatabase)
+    }
+
+
 }
