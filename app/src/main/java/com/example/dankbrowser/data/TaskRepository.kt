@@ -3,44 +3,38 @@ package com.example.dankbrowser.data
 import com.example.dankbrowser.task_view.models.Task
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.kotlin.toFlow
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
 class TaskRepository {
 
-    @Volatile
-    private var realmDatabase: Realm
-    private val databaseThread = CoroutineScope(Dispatchers.Default).coroutineContext
-//    private val myScope = CoroutineScope(Dispatchers.IO)
-
     init {
-        runBlocking(databaseThread) {
-            val config = RealmConfiguration.Builder()
-                .name(REALM_NAME)
-                .build()
-            println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
-            realmDatabase = Realm.getInstance(config)
-        }
+
+        val config = RealmConfiguration.Builder()
+            .name(REALM_NAME)
+            .build()
+        Realm.setDefaultConfiguration(config)
+//        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
+
+
     }
 
-    fun getAll(): Flow<List<Task>> {
-        return runBlocking(databaseThread) {
-            println(this::class.simpleName + " getAll - Thread: " + Thread.currentThread().id)
+    fun getAll(): List<Task> {
+//        println(this::class.simpleName + " getAll - Thread: " + Thread.currentThread().id)
+        return runBlocking(Dispatchers.IO) {
+            val realmDatabase = Realm.getDefaultInstance()
+
             realmDatabase.where(TaskEntity::class.java).findAll()
-                .toFlow()
                 .map {
-                    it.toList().map { taskEntity -> taskEntity.toTask() }
+                    it.toTask()
                 }
         }
     }
 
     fun addTask(taskEntity: TaskEntity) {
-        runBlocking(databaseThread) {
-            println(this::class.simpleName + " addTask - Thread: " + Thread.currentThread().id)
+//        println(this::class.simpleName + " addTask - Thread: " + Thread.currentThread().id)
+        runBlocking(Dispatchers.IO) {
+            val realmDatabase = Realm.getDefaultInstance()
             realmDatabase.executeTransaction {
                 it.insert(taskEntity)
             }
@@ -48,8 +42,9 @@ class TaskRepository {
     }
 
     fun deleteTask(task: Task) {
-        runBlocking(databaseThread) {
-            println(this::class.simpleName + " deleteTask - Thread: " + Thread.currentThread().id)
+//        println(this::class.simpleName + " deleteTask - Thread: " + Thread.currentThread().id)
+        runBlocking(Dispatchers.IO) {
+            val realmDatabase = Realm.getDefaultInstance()
             realmDatabase.executeTransaction {
                 task.originalObject.deleteFromRealm()
             }

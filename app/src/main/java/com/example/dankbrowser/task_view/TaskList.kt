@@ -8,11 +8,8 @@ import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
 import com.example.dankbrowser.task_view.models.rv_types.RVItem
 import io.realm.RealmList
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings {
     override var list = mutableListOf<Task>()
@@ -22,11 +19,8 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
     init {
         val results = taskRepository.getAll()
 
-        results.onEach {
-            it.forEach { task ->
-                list.add(task)
-            }
-        }.launchIn(GlobalScope)
+        list.addAll(results)
+
     }
 
     override fun getItemCount(): Int {
