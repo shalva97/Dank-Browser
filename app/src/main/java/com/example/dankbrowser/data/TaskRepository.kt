@@ -1,57 +1,29 @@
 package com.example.dankbrowser.data
 
+import com.example.dankbrowser.data.TaskEntity.Companion.toTask
 import com.example.dankbrowser.task_view.models.Task
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import io.realm.delete
 
 class TaskRepository {
 
-    init {
-
-        val config = RealmConfiguration.Builder()
-            .name(REALM_NAME)
-            .build()
-        Realm.setDefaultConfiguration(config)
-//        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
-
-
-    }
+    private val config = RealmConfiguration(schema = setOf(TaskEntity::class, TabEntity::class))
+    private val realm = Realm(config)
 
     fun getAll(): List<Task> {
-//        println(this::class.simpleName + " getAll - Thread: " + Thread.currentThread().id)
-        return runBlocking(Dispatchers.IO) {
-            val realmDatabase = Realm.getDefaultInstance()
-
-            realmDatabase.where(TaskEntity::class.java).findAll()
-                .map {
-                    it.toTask()
-                }
-        }
+        return realm.objects(TaskEntity::class).map { it.toTask() }
     }
 
-    fun addTask(taskEntity: TaskEntity) {
-//        println(this::class.simpleName + " addTask - Thread: " + Thread.currentThread().id)
-        runBlocking(Dispatchers.IO) {
-            val realmDatabase = Realm.getDefaultInstance()
-            realmDatabase.executeTransaction {
-                it.insert(taskEntity)
-            }
-        }
+    fun addTask(taskEntity: TaskEntity): Task {
+        return realm.writeBlocking {
+            copyToRealm(taskEntity)
+        }.toTask()
     }
 
     fun deleteTask(task: Task) {
-//        println(this::class.simpleName + " deleteTask - Thread: " + Thread.currentThread().id)
-        runBlocking(Dispatchers.IO) {
-            val realmDatabase = Realm.getDefaultInstance()
-            realmDatabase.executeTransaction {
-                task.originalObject.deleteFromRealm()
-            }
+        realm.writeBlocking {
+            findLatest(task.originalObject)?.delete()
         }
-    }
-
-    companion object {
-        private const val REALM_NAME: String = "DankApplication"
     }
 }

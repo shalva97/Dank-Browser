@@ -17,53 +17,77 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
     private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-    private val realmName: String = "testing"
-    private val config: RealmConfiguration
-    private val realm: Realm
+    private val config =
+        RealmConfiguration(schema = setOf(TaskEntity::class, TabEntity::class), path = "testing")
+    private val realm = Realm(config)
 
+    @Test
+    fun realmTest() {
+        realm.writeBlocking {
+            val task = TaskEntity().apply {
+                name = "old task"
+            }
+            copyToRealm(task)
+        }
+        val myTask = realm.objects(TaskEntity::class).query()
+            .first()
 
-    init {
-        Realm.init(appContext)
-        config = RealmConfiguration.Builder().name(realmName).deleteRealmIfMigrationNeeded().build()
-        realm = Realm.getInstance(config)
+        assert(myTask.name == "old task")
+
+        realm.writeBlocking {
+            objects(TaskEntity::class).delete()
+        }
     }
 
     @Test
-    fun uselessDatabaseTest() {
-        val tab = TabEntity(
-            "youtube", "default", "httttp"
-        )
+    fun databaseReturnsEmptyListIfThereAreNoObjectsSaved() {
+        val myTask = realm.objects(TaskEntity::class).query()
 
-        realm.executeTransaction {
-            it.insert(tab)
-        }
-
-        val results = realm.where(TabEntity::class.java).findAll()
-
-        assert(results.first()?.url == "youtube")
-        realm.executeTransaction { it.deleteAll() }
+        assert(myTask.isEmpty())
     }
 
-
-    @Test
-    fun saveListToDatabase() {
-        val task = TaskEntity("asdf", "default").apply {
-            tabs.add(TabEntity("youtube", "default", "httttp"))
-            tabs.add(TabEntity("facebook", "default", "httttp"))
-        }
-
-        realm.executeTransaction {
-            it.insert(task)
-        }
-
-        val result = realm.where(TaskEntity::class.java).findAll()
-
-        assert(result.first()?.tabs?.size == 2)
-
-        realm.executeTransaction {
-            it.deleteAll()
-        }
-
-    }
+//    init {
+//        Realm.init(appContext)
+//        config = RealmConfiguration.Builder().name(realmName).deleteRealmIfMigrationNeeded().build()
+//        realm = Realm.getInstance(config)
+//    }
+//
+//    @Test
+//    fun uselessDatabaseTest() {
+//        val tab = TabEntity(
+//            "youtube", "default", "httttp"
+//        )
+//
+//        realm.executeTransaction {
+//            it.insert(tab)
+//        }
+//
+//        val results = realm.where(TabEntity::class.java).findAll()
+//
+//        assert(results.first()?.url == "youtube")
+//        realm.executeTransaction { it.deleteAll() }
+//    }
+//
+//
+//    @Test
+//    fun saveListToDatabase() {
+//        val task = TaskEntity("asdf", "default").apply {
+//            tabs.add(TabEntity("youtube", "default", "httttp"))
+//            tabs.add(TabEntity("facebook", "default", "httttp"))
+//        }
+//
+//        realm.executeTransaction {
+//            it.insert(task)
+//        }
+//
+//        val result = realm.where(TaskEntity::class.java).findAll()
+//
+//        assert(result.first()?.tabs?.size == 2)
+//
+//        realm.executeTransaction {
+//            it.deleteAll()
+//        }
+//
+//    }
 
 }

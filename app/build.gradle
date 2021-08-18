@@ -1,8 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'realm-android'
+    id("io.realm.kotlin") version "0.4.1"
 }
 
 android {
@@ -40,7 +39,7 @@ android {
 ext {
     geckoviewChannel = "nightly"
     geckoviewVersion = "91.0.20210705095222"
-    lifecycle_version = "2.4.0-alpha02"
+    lifecycle_version = "2.4.0-alpha03"
 }
 
 dependencies {
@@ -58,6 +57,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("com.louiscad.splitties:splitties-fun-pack-android-base:3.0.0-beta03")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+
+    implementation("io.realm.kotlin:library:0.4.1")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

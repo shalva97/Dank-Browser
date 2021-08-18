@@ -7,7 +7,6 @@ import com.example.dankbrowser.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
 import com.example.dankbrowser.task_view.models.rv_types.RVItem
-import io.realm.RealmList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -18,9 +17,7 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
 
     init {
         val results = taskRepository.getAll()
-
         list.addAll(results)
-
     }
 
     override fun getItemCount(): Int {
@@ -37,28 +34,30 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         }.flatten()[index]
     }
 
-    fun addTask(taskName: String) {
-        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
-        val taskEntity = TaskEntity(
-            taskName,
-            "default",
-            RealmList(
-                TabEntity("http://youtube.com", contextId = "default", "Blank Tab")
-            )
-        )
-
-        taskRepository.addTask(taskEntity)
-
-        list.add(taskEntity.toTask())
-        onDataChanged()
-    }
-
     override fun addOnDataChangedCallback(cb: () -> Unit) {
         dataChangeCallback = cb
     }
 
+    fun addTask(taskName: String) {
+
+        val taskEntity = TaskEntity()
+        taskEntity.name = taskName
+        taskEntity.contextId = "default"
+        taskEntity.tabs.add(
+            TabEntity().apply {
+                url = "http://youtube.com"
+                contextId = taskEntity.contextId
+                title = "Blank Tab"
+            }
+        )
+
+        val task = taskRepository.addTask(taskEntity)
+
+        list.add(task)
+        onDataChanged()
+    }
+
     fun deleteTask(task: Task) {
-        println(this::class.simpleName + " Thread: " + Thread.currentThread().id)
         taskRepository.deleteTask(task)
         list.remove(task)
         onDataChanged()
