@@ -1,7 +1,5 @@
 package com.example.dankbrowser.task_view
 
-import com.example.dankbrowser.data.TabEntity
-import com.example.dankbrowser.data.TaskEntity
 import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.task_view.models.Tab
@@ -30,7 +28,7 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
             val tabs = getTabsFromTask(task)
             val taskName = listOf(RVItem.TaskUI(task.name, task))
 
-            taskName + tabs + RVItem.NewTabButton
+            taskName + tabs + RVItem.NewTabButton(task)
         }.flatten()[index]
     }
 
@@ -40,18 +38,7 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
 
     fun addTask(taskName: String) {
 
-        val taskEntity = TaskEntity()
-        taskEntity.name = taskName
-        taskEntity.contextId = "default"
-        taskEntity.tabs.add(
-            TabEntity().apply {
-                url = "http://youtube.com"
-                contextId = taskEntity.contextId
-                title = "Blank Tab"
-            }
-        )
-
-        val task = taskRepository.addTask(taskEntity)
+        val task = taskRepository.addTask(taskName)
 
         list.add(task)
         onDataChanged()
@@ -64,7 +51,9 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
     }
 
     fun addTab(task: Task) {
-        taskRepository.addTab(task)
+        val tab = taskRepository.addTab(task)
+        task.tabsList.add(tab)
+        onDataChanged()
     }
 
     fun removeTab(task: Task, tab: Tab) {

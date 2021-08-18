@@ -1,5 +1,6 @@
 package com.example.dankbrowser.data
 
+import com.example.dankbrowser.data.TabEntity.Companion.emptyTab
 import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
@@ -22,6 +23,14 @@ class TabEntity : RealmObject {
                 url = tab.url
                 contextId = tab.contextId
                 title = tab.title
+            }
+        }
+
+        fun emptyTab(): TabEntity {
+            return TabEntity().apply {
+                url = "http://youtube.com"
+                contextId = "Default"
+                title = "Blank Tab"
             }
         }
     }
@@ -55,6 +64,14 @@ class TaskEntity : RealmObject {
                 name = task.name
                 contextId = task.contextId
                 tabs = task.tabsList.map { it.originalObject } as RealmList<TabEntity>
+            }
+        }
+
+        fun emptyTask(): TaskEntity {
+            return TaskEntity().apply {
+                name = "Untitled Task"
+                this.contextId = "Default"
+                tabs.add(emptyTab())
             }
         }
     }

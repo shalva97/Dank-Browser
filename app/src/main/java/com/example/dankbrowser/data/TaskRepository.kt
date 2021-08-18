@@ -16,7 +16,11 @@ class TaskRepository {
         return realm.objects(TaskEntity::class).map { it.toTask() }
     }
 
-    fun addTask(taskEntity: TaskEntity): Task {
+    fun addTask(taskName: String): Task {
+
+        val taskEntity = TaskEntity.emptyTask()
+        taskEntity.name = taskName
+
         return realm.writeBlocking {
             copyToRealm(taskEntity)
         }.toTask()
@@ -28,8 +32,12 @@ class TaskRepository {
         }
     }
 
-    fun addTab(task: Task) {
-        TODO("Not yet implemented")
+    fun addTab(task: Task): Tab {
+        return realm.writeBlocking {
+            val tab = copyToRealm(TabEntity.emptyTab())
+            findLatest(task.originalObject)?.tabs?.add(tab)
+            copyToRealm(task.originalObject)
+        }.toTask().tabsList.last()
     }
 
     fun removeTab(task: Task, tab: Tab) {

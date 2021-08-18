@@ -49,4 +49,8 @@ class TaskViewViewModel(
         taskList.setSelectedTab(tab)
         navigation.tryEmit(R.id.action_taskView_to_geckoFragment)
     }
+
+    fun createNewTab(task: Task) {
+        taskList.addTab(task)
+    }
 }

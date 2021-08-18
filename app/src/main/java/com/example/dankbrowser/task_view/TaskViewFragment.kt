@@ -54,6 +54,10 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                         viewModel.switchToTab(it.originalObject) // TODO
                     }.launchIn(this)
 
+                    adapter.newTabTapped.onEach {
+                        viewModel.createNewTab(it)
+                    }.launchIn(this)
+
                     viewModel.navigation.onEach {
                         findNavController().navigate(it)
                     }.launchIn(this)

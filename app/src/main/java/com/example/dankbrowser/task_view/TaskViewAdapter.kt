@@ -3,9 +3,11 @@ package com.example.dankbrowser.task_view
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dankbrowser.databinding.NewTabRvItemBinding
 import com.example.dankbrowser.databinding.TabRvItemBinding
 import com.example.dankbrowser.databinding.TaskViewNameRvItemBinding
 import com.example.dankbrowser.task_view.models.ITaskListRVBindings
+import com.example.dankbrowser.task_view.models.Task
 import com.example.dankbrowser.task_view.models.rv_types.RVItem
 import com.example.dankbrowser.task_view.models.rv_types.RVViewTypes
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,6 +18,7 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val tabTapped = MutableSharedFlow<RVItem.TabUI>(0, 1)
     val taskTapped = MutableSharedFlow<RVItem.TaskUI>(0, 1)
     val deleteTaskTapped = MutableSharedFlow<RVItem.TaskUI>(0, 1)
+    val newTabTapped = MutableSharedFlow<Task>(0, 1)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RVViewTypes.createViewHolder(parent, viewType)
@@ -23,9 +26,12 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val itemAtIndex = taskList.getItemAtIndex(position)) {
-            RVItem.NewTabButton -> {
-            }
-            RVItem.NewTaskButton -> {
+            is RVItem.NewTabButton -> {
+                NewTabRvItemBinding.bind(holder.itemView).apply {
+                    root.setOnClickListener {
+                        newTabTapped.tryEmit(itemAtIndex.task)
+                    }
+                }
             }
             is RVItem.TabUI -> {
                 TabRvItemBinding.bind(holder.itemView).apply {
