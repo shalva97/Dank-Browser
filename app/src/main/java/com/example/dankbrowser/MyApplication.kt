@@ -26,5 +26,4 @@ class Components(context: Context) {
         TaskList(realmDatabase)
     }
 
-
 }

@@ -64,11 +64,11 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
     }
 
     fun addTab(task: Task) {
-
+        taskRepository.addTab(task)
     }
 
     fun removeTab(task: Task, tab: Tab) {
-
+        taskRepository.removeTab(task, tab)
     }
 
     fun setSelectedTab(tab: Tab) {

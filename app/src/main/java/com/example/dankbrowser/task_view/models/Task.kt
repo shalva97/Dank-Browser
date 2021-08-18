@@ -10,4 +10,3 @@ data class Task(val name: String, val contextId: String, val originalObject: Tas
     }
 
 }
-

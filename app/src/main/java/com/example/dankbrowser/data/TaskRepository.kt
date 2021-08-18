@@ -1,6 +1,7 @@
 package com.example.dankbrowser.data
 
 import com.example.dankbrowser.data.TaskEntity.Companion.toTask
+import com.example.dankbrowser.task_view.models.Tab
 import com.example.dankbrowser.task_view.models.Task
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -25,5 +26,13 @@ class TaskRepository {
         realm.writeBlocking {
             findLatest(task.originalObject)?.delete()
         }
+    }
+
+    fun addTab(task: Task) {
+        TODO("Not yet implemented")
+    }
+
+    fun removeTab(task: Task, tab: Tab) {
+        TODO("Not yet implemented")
     }
 }
