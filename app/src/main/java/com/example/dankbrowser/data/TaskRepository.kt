@@ -40,7 +40,9 @@ class TaskRepository {
         }.toTask().tabsList.last()
     }
 
-    fun removeTab(task: Task, tab: Tab) {
-        TODO("Not yet implemented")
+    fun removeTab(tab: Tab) {
+        realm.writeBlocking {
+            findLatest(tab.originalObject)?.delete()
+        }
     }
 }

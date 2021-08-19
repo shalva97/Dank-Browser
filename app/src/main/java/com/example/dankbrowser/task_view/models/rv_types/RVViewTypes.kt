@@ -8,7 +8,7 @@ import com.example.dankbrowser.task_view.TaskViewAdapter
 import java.security.InvalidParameterException
 
 enum class RVViewTypes(val viewType: Int) {
-    TASK_TITLE(0), TAB(1), NEW_TAB_BTN(2), NEW_TASK_BTN(3);
+    TASK_TITLE(0), TAB(1), NEW_TAB_BTN(2);
 
     companion object {
         fun createViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -26,10 +26,6 @@ enum class RVViewTypes(val viewType: Int) {
                 RVViewTypes.NEW_TAB_BTN.viewType -> {
                     val layout = view.inflate(R.layout.new_tab_rv_item, parent, false)
                     TaskViewAdapter.NewTabBTNViewHolder(layout)
-                }
-                RVViewTypes.NEW_TASK_BTN.viewType -> {
-                    val layout = view.inflate(R.layout.new_tast_rv_item, parent, false)
-                    TaskViewAdapter.NetTaskBTNViewHolder(layout)
                 }
                 else -> {
                     throw InvalidParameterException()

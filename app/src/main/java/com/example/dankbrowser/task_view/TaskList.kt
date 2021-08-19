@@ -56,8 +56,8 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         onDataChanged()
     }
 
-    fun removeTab(task: Task, tab: Tab) {
-        taskRepository.removeTab(task, tab)
+    fun removeTab(tab: Tab) {
+        taskRepository.removeTab(tab)
     }
 
     fun setSelectedTab(tab: Tab) {

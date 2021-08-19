@@ -18,32 +18,4 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/main" />
 
-
-<!--    <Button-->
-<!--        android:id="@+id/btnShalva"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="shalva"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/btnZero" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnZero"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="zero"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/btnShalva"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/btnReload" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnReload"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="reload"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/btnZero"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
