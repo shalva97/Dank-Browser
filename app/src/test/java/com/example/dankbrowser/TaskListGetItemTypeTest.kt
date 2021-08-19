@@ -1,8 +1,10 @@
 package com.example.dankbrowser
 
-import com.example.dankbrowser.task_view.TaskList
-import com.example.dankbrowser.task_view.models.*
-import com.example.dankbrowser.task_view.models.rv_types.RVItem
+import com.example.dankbrowser.domain.Tab
+import com.example.dankbrowser.domain.Task
+import com.example.dankbrowser.domain.TaskList
+import com.example.dankbrowser.presentation.task_view.models.*
+import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
 import org.junit.Test
 
 class TaskListGetItemTypeTest {

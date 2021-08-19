@@ -1,4 +1,4 @@
-package com.example.dankbrowser.task_view
+package com.example.dankbrowser.presentation.task_view
 
 import android.view.View
 import android.view.ViewGroup
@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dankbrowser.databinding.NewTabRvItemBinding
 import com.example.dankbrowser.databinding.TabRvItemBinding
 import com.example.dankbrowser.databinding.TaskViewNameRvItemBinding
-import com.example.dankbrowser.task_view.models.ITaskListRVBindings
-import com.example.dankbrowser.task_view.models.Task
-import com.example.dankbrowser.task_view.models.rv_types.RVItem
-import com.example.dankbrowser.task_view.models.rv_types.RVViewTypes
+import com.example.dankbrowser.domain.Task
+import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
+import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
+import com.example.dankbrowser.presentation.task_view.models.rv_types.RVViewTypes
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

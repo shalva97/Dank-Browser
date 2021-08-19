@@ -1,4 +1,4 @@
-package com.example.dankbrowser.task_view.components
+package com.example.dankbrowser.presentation.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.dankbrowser.databinding.AddTaskViewBinding
 
 
-class AddTaskView @JvmOverloads constructor(
+class EditTextFieldWithConfirmation @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

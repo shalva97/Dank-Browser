@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".task_view.TaskViewFragment">
+    tools:context=".presentation.task_view.TaskViewFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskViewListRV"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.example.dankbrowser.task_view.components.AddTaskView
+    <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
         android:id="@+id/addTaskATV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

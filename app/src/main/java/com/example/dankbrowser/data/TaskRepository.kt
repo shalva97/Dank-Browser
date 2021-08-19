@@ -1,8 +1,8 @@
 package com.example.dankbrowser.data
 
 import com.example.dankbrowser.data.TaskEntity.Companion.toTask
-import com.example.dankbrowser.task_view.models.Tab
-import com.example.dankbrowser.task_view.models.Task
+import com.example.dankbrowser.domain.Tab
+import com.example.dankbrowser.domain.Task
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.delete

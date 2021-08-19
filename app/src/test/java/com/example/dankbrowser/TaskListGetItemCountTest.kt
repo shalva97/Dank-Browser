@@ -1,8 +1,8 @@
 package com.example.dankbrowser
 
-import com.example.dankbrowser.task_view.TaskList
-import com.example.dankbrowser.task_view.models.Tab
-import com.example.dankbrowser.task_view.models.Task
+import com.example.dankbrowser.domain.Tab
+import com.example.dankbrowser.domain.Task
+import com.example.dankbrowser.domain.TaskList
 import org.junit.Test
 
 

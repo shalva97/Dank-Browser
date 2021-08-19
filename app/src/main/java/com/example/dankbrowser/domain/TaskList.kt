@@ -1,10 +1,8 @@
-package com.example.dankbrowser.task_view
+package com.example.dankbrowser.domain
 
 import com.example.dankbrowser.data.TaskRepository
-import com.example.dankbrowser.task_view.models.ITaskListRVBindings
-import com.example.dankbrowser.task_view.models.Tab
-import com.example.dankbrowser.task_view.models.Task
-import com.example.dankbrowser.task_view.models.rv_types.RVItem
+import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
+import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 

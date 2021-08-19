@@ -1,7 +1,7 @@
-package com.example.dankbrowser.task_view.models.rv_types
+package com.example.dankbrowser.presentation.task_view.models.rv_types
 
-import com.example.dankbrowser.task_view.models.Tab
-import com.example.dankbrowser.task_view.models.Task
+import com.example.dankbrowser.domain.Tab
+import com.example.dankbrowser.domain.Task
 
 sealed class RVItem(private val type: RVViewTypes) {
 

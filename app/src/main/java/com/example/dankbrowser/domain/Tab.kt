@@ -1,4 +1,4 @@
-package com.example.dankbrowser.task_view.models
+package com.example.dankbrowser.domain
 
 import com.example.dankbrowser.data.TabEntity
 import org.mozilla.geckoview.GeckoRuntime

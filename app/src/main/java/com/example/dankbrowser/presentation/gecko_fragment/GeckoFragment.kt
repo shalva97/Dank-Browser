@@ -1,4 +1,4 @@
-package com.example.dankbrowser.gecko_fragment
+package com.example.dankbrowser.presentation.gecko_fragment
 
 import android.os.Bundle
 import android.view.View

@@ -1,12 +1,13 @@
-package com.example.dankbrowser.task_view
+package com.example.dankbrowser.presentation.task_view
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.dankbrowser.R
 import com.example.dankbrowser.components
-import com.example.dankbrowser.task_view.models.ITaskListRVBindings
-import com.example.dankbrowser.task_view.models.Tab
-import com.example.dankbrowser.task_view.models.Task
+import com.example.dankbrowser.domain.Tab
+import com.example.dankbrowser.domain.Task
+import com.example.dankbrowser.domain.TaskList
+import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class TaskViewViewModel(

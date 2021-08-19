@@ -3,7 +3,7 @@ package com.example.dankbrowser
 import android.app.Application
 import android.content.Context
 import com.example.dankbrowser.data.TaskRepository
-import com.example.dankbrowser.task_view.TaskList
+import com.example.dankbrowser.domain.TaskList
 import org.mozilla.geckoview.GeckoRuntime
 
 class DankApplication : Application() {
