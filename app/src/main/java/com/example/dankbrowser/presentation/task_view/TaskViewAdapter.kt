@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dankbrowser.databinding.NewTabRvItemBinding
 import com.example.dankbrowser.databinding.TabRvItemBinding
 import com.example.dankbrowser.databinding.TaskViewNameRvItemBinding
+import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
 import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
@@ -19,6 +20,7 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val taskTapped = MutableSharedFlow<RVItem.TaskUI>(0, 1)
     val deleteTaskTapped = MutableSharedFlow<RVItem.TaskUI>(0, 1)
     val newTabTapped = MutableSharedFlow<Task>(0, 1)
+    val deleteTabTapped = MutableSharedFlow<Pair<Task, Tab>>(0, 1)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RVViewTypes.createViewHolder(parent, viewType)
@@ -38,6 +40,9 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     titleTV.text = itemAtIndex.name
                     root.setOnClickListener {
                         tabTapped.tryEmit(itemAtIndex)
+                    }
+                    closeIB.setOnClickListener {
+                        deleteTabTapped.tryEmit(itemAtIndex.task to itemAtIndex.originalObject)
                     }
                 }
             }

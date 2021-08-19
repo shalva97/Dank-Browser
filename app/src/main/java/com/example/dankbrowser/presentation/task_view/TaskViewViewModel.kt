@@ -21,23 +21,6 @@ class TaskViewViewModel(
         taskList.addTask(taskName)
     }
 
-
-//    init {
-//        taskList.taskList.addAll(
-//            listOf(
-//                Task("asdf", "default").apply {
-//                    addTab(Tab("http://youtube.com", contextId, "youtttube titlea"))
-//                    addTab(Tab("http://facebook.com", contextId, "youtttube titlea"))
-//                },
-//                Task("asdf another", "default").apply {
-//                    addTab(Tab("http://youtube.com", contextId, "youtttube titlea"))
-//                    addTab(Tab("http://facebook.com", contextId, "youtttube titlea"))
-//                    addTab(Tab("http://facebook.com", contextId, "facebook titlea"))
-//                },
-//            )
-//        )
-//    }
-
     fun getRVData(): ITaskListRVBindings {
         return taskList
     }
@@ -53,5 +36,9 @@ class TaskViewViewModel(
 
     fun createNewTab(task: Task) {
         taskList.addTab(task)
+    }
+
+    fun deleteTab(it: Pair<Task, Tab>) {
+        taskList.removeTab(it.first, it.second)
     }
 }

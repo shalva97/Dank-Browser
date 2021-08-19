@@ -51,7 +51,11 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                     }.launchIn(this)
 
                     adapter.tabTapped.onEach {
-                        viewModel.switchToTab(it.originalObject) // TODO
+                        viewModel.switchToTab(it.originalObject)
+                    }.launchIn(this)
+
+                    adapter.deleteTabTapped.onEach {
+                        viewModel.deleteTab(it)
                     }.launchIn(this)
 
                     adapter.newTabTapped.onEach {
