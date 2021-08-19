@@ -5,9 +5,10 @@ import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import org.jetbrains.annotations.TestOnly
 
 class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings {
-    override var list = mutableListOf<Task>()
+    private var list = mutableListOf<Task>()
     private lateinit var dataChangeCallback: () -> Unit
     private val selectedTab = MutableSharedFlow<Tab>(1, 1)
 
@@ -54,8 +55,10 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         onDataChanged()
     }
 
-    fun removeTab(tab: Tab) {
+    fun removeTab(task: Task, tab: Tab) {
         taskRepository.removeTab(tab)
+        task.tabsList.remove(tab)
+        onDataChanged()
     }
 
     fun setSelectedTab(tab: Tab) {
@@ -70,6 +73,11 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         if (::dataChangeCallback.isInitialized) {
             dataChangeCallback.invoke()
         }
+    }
+
+    @TestOnly
+    fun getTasks(): MutableList<Task> {
+        return list
     }
 
     private fun getTabsFromTask(task: Task): List<RVItem.TabUI> {

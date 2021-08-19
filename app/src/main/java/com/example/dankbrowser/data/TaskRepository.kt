@@ -4,13 +4,9 @@ import com.example.dankbrowser.data.TaskEntity.Companion.toTask
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.delete
 
-class TaskRepository {
-
-    private val config = RealmConfiguration(schema = setOf(TaskEntity::class, TabEntity::class))
-    private val realm = Realm(config)
+class TaskRepository(private val realm: Realm) {
 
     fun getAll(): List<Task> {
         return realm.objects(TaskEntity::class).map { it.toTask() }
