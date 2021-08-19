@@ -18,7 +18,11 @@ class TaskViewViewModel(
     private val taskList: TaskList = components.taskList
 
     fun addTask(taskName: String) {
-        taskList.addTask(taskName)
+        if (taskName.isNotEmpty()) {
+            taskList.addTask(taskName)
+        } else {
+            taskList.addTask("Untitled")
+        }
     }
 
     fun getRVData(): ITaskListRVBindings {
