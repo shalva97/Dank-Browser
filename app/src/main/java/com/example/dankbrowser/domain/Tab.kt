@@ -5,7 +5,7 @@ import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoSession
 
 data class Tab(
-    val url: String,
+    val url: Url,
     val contextId: String,
     val title: String,
     val originalObject: TabEntity
@@ -15,9 +15,14 @@ data class Tab(
     }
 
     fun loadWebsite(geckoRuntime: GeckoRuntime) {
-        if (!geckoSession.isOpen) {
-            geckoSession.loadUri(url)
+        if (!geckoSession.isOpen && url is Url.Website) {
+            geckoSession.loadUri(url.url)
             geckoSession.open(geckoRuntime)
         }
     }
+}
+
+sealed class Url {
+    object Empty : Url()
+    data class Website(val url: String) : Url()
 }

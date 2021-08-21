@@ -20,6 +20,8 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentGeckoBinding.bind(view)
 
+
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.selectedTab.collect {

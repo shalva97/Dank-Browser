@@ -2,7 +2,7 @@
     <string name="app_name">Dank Browser</string>
 
     <string name="rv_item_new_tab">New tab</string>
-    <string name="task_name">Enter task name</string>
+    <string name="confirmation_text_hint">Enter name</string>
     <string name="add_new_task">Add new task</string>
     <string name="common_add">Add</string>
     <string name="common_cancel">Cancel</string>

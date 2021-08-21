@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.components
 import com.example.dankbrowser.domain.TaskList
+import com.example.dankbrowser.domain.Url
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.mozilla.geckoview.GeckoRuntime
@@ -17,10 +19,15 @@ class GeckoViewModel(
     private val taskList: TaskList = components.taskList
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
     val selectedTab = taskList.getSelectedTab()
+    val urlBar = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
 
     init {
         selectedTab.onEach {
-            it.loadWebsite(geckoRuntime)
+            if (it.url is Url.Empty) {
+                urlBar.tryEmit(true)
+            } else {
+                it.loadWebsite(geckoRuntime)
+            }
         }.launchIn(viewModelScope)
     }
 

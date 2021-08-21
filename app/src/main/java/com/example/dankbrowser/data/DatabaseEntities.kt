@@ -4,6 +4,7 @@ import com.example.dankbrowser.data.TabEntity.Companion.emptyTab
 import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
+import com.example.dankbrowser.domain.Url
 import io.realm.RealmList
 import io.realm.RealmObject
 
@@ -15,12 +16,22 @@ class TabEntity : RealmObject {
     companion object {
 
         fun TabEntity.toTab(): Tab {
-            return Tab(url = url, contextId = contextId, title = title, originalObject = this)
+            val tabUrl = if (url.isEmpty()) {
+                Url.Empty
+            } else {
+                Url.Website(url)
+            }
+            return Tab(url = tabUrl, contextId = contextId, title = title, originalObject = this)
         }
 
         fun toEntity(tab: Tab): TabEntity {
             return TabEntity().apply {
-                url = tab.url
+                val tabEntityUrl = if (tab.url is Url.Website) {
+                    tab.url.url
+                } else {
+                    ""
+                }
+                url = tabEntityUrl
                 contextId = tab.contextId
                 title = tab.title
             }

@@ -81,7 +81,7 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
     }
 
     private fun getTabsFromTask(task: Task): List<RVItem.TabUI> {
-        return task.tabsList.map { tab -> RVItem.TabUI(tab.title, tab.url, tab, task) }
+        return task.tabsList.map { tab -> RVItem.TabUI(tab.title, tab, task) }
     }
 
     companion object {

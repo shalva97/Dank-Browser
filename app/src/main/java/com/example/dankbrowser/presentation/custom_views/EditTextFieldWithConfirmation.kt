@@ -1,11 +1,12 @@
 package com.example.dankbrowser.presentation.custom_views
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.dankbrowser.databinding.AddTaskViewBinding
-
+import splitties.views.backgroundColor
 
 class EditTextFieldWithConfirmation @JvmOverloads constructor(
     context: Context,
@@ -31,6 +32,7 @@ class EditTextFieldWithConfirmation @JvmOverloads constructor(
                 taskNameET.setText("")
             }
         }
+        backgroundColor = Color.WHITE
     }
 
     fun onAddTask(callback: (taskName: String) -> Unit) {
