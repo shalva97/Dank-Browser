@@ -19,7 +19,7 @@ class GeckoViewModel(
     private val taskList: TaskList = components.taskList
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
     val selectedTab = taskList.getSelectedTab()
-    val urlBar = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+    val urlBar = MutableSharedFlow<Boolean>(1, 1)
 
     init {
         selectedTab.onEach {
