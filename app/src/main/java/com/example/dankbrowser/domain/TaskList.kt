@@ -2,38 +2,20 @@ package com.example.dankbrowser.domain
 
 import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
-import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import org.jetbrains.annotations.TestOnly
 
-class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings {
+class TaskList(
+    private val taskRepository: TaskRepository,
+    private var list: MutableList<Task> = mutableListOf()
+) : ITaskListRVBindings by TaskListRVBindings(list) {
 
-    private var list = mutableListOf<Task>()
-    private lateinit var dataChangeCallback: () -> Unit
     private val selectedTask = MutableSharedFlow<Task>(1, 1)
 
     init {
         val results = taskRepository.getAll()
         list.addAll(results)
-    }
-
-    override fun getItemCount(): Int {
-        val tabCount = list.map { it.tabsList }.flatten().size
-        return list.size * TASK_TITLE_AND_NEW_TAB_BTN + tabCount
-    }
-
-    override fun getItemAtIndex(index: Int): RVItem {
-        return list.map { task ->
-            val tabs = getTabsFromTask(task)
-            val taskName = listOf(RVItem.TaskUI(task.name, task))
-
-            taskName + tabs + RVItem.NewTabButton(task)
-        }.flatten()[index]
-    }
-
-    override fun addOnDataChangedCallback(cb: () -> Unit) {
-        dataChangeCallback = cb
     }
 
     fun addTask(taskName: String) {
@@ -71,19 +53,9 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         return selectedTask
     }
 
-    override fun onDataChanged() {
-        if (::dataChangeCallback.isInitialized) {
-            dataChangeCallback.invoke()
-        }
-    }
-
     @TestOnly
     fun getTasks(): MutableList<Task> {
         return list
-    }
-
-    private fun getTabsFromTask(task: Task): List<RVItem.TabUI> {
-        return task.tabsList.map { tab -> RVItem.TabUI(tab.title, tab, task) }
     }
 
     fun changeUrl(selectedTab: Tab, url: String, task: Task): Tab {
