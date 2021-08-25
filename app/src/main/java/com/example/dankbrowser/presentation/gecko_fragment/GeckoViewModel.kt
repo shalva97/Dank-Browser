@@ -18,17 +18,27 @@ class GeckoViewModel(
 
     private val taskList: TaskList = components.taskList
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
-    val selectedTab = taskList.getSelectedTab()
+    val selectedTask = taskList.getSelectedTab()
     val urlBar = MutableSharedFlow<Boolean>(1, 1)
 
     init {
-        selectedTab.onEach {
-            if (it.url is Url.Empty) {
+        selectedTask.onEach {
+            if (it.selectedTab.url is Url.Empty) {
                 urlBar.tryEmit(true)
             } else {
-                it.loadWebsite(geckoRuntime)
+                it.selectedTab.loadWebsite(geckoRuntime)
+                hideUrlBar()
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun changeUrl(url: String) {
+        val task = selectedTask.replayCache.first()
+        taskList.changeUrl(task.selectedTab, url, task)
+    }
+
+    fun hideUrlBar() {
+        urlBar.tryEmit(false)
     }
 
 }

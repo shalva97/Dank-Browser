@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.jetbrains.annotations.TestOnly
 
 class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings {
+
     private var list = mutableListOf<Task>()
     private lateinit var dataChangeCallback: () -> Unit
-    private val selectedTab = MutableSharedFlow<Tab>(1, 1)
+    private val selectedTask = MutableSharedFlow<Task>(1, 1)
 
     init {
         val results = taskRepository.getAll()
@@ -61,12 +62,13 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
         onDataChanged()
     }
 
-    fun setSelectedTab(tab: Tab) {
-        selectedTab.tryEmit(tab)
+    fun setSelectedTab(tab: Tab, task: Task) {
+        task.selectedTab = tab
+        selectedTask.tryEmit(task)
     }
 
-    fun getSelectedTab(): SharedFlow<Tab> {
-        return selectedTab
+    fun getSelectedTab(): SharedFlow<Task> {
+        return selectedTask
     }
 
     override fun onDataChanged() {
@@ -82,6 +84,18 @@ class TaskList(private val taskRepository: TaskRepository) : ITaskListRVBindings
 
     private fun getTabsFromTask(task: Task): List<RVItem.TabUI> {
         return task.tabsList.map { tab -> RVItem.TabUI(tab.title, tab, task) }
+    }
+
+    fun changeUrl(selectedTab: Tab, url: String, task: Task): Tab {
+        val index = task.tabsList.indexOf(selectedTab)
+        val newElement = taskRepository.changeUrl(selectedTab, url)
+
+        task.tabsList.removeAt(index)
+        task.tabsList.add(index, newElement)
+        task.selectedTab = newElement
+
+        this.selectedTask.tryEmit(task)
+        return newElement
     }
 
     companion object {

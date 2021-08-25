@@ -1,5 +1,6 @@
 package com.example.dankbrowser.data
 
+import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.data.TaskEntity.Companion.toTask
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
@@ -40,5 +41,21 @@ class TaskRepository(private val realm: Realm) {
         realm.writeBlocking {
             findLatest(tab.originalObject)?.delete()
         }
+    }
+
+    fun changeUrl(selectedTab: Tab, url: String): Tab {
+        val tabEntity = realm.writeBlocking {
+            findLatest(selectedTab.originalObject)?.apply {
+                this.url = url
+            }
+        }
+
+        val newElement = tabEntity!!.toTab()
+        if (newElement.isInitialized()) {
+            newElement.geckoSession = selectedTab.geckoSession
+        }
+
+        return newElement
+
     }
 }

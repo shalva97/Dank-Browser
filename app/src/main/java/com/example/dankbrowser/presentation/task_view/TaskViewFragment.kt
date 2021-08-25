@@ -39,7 +39,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                 hideAddTaskView()
             }
 
-            addTaskATV.onAddTask {
+            addTaskATV.onPositive {
                 viewModel.addTask(it)
                 hideAddTaskView()
             }
@@ -51,7 +51,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                     }.launchIn(this)
 
                     adapter.tabTapped.onEach {
-                        viewModel.switchToTab(it.originalObject)
+                        viewModel.switchToTab(it.originalObject, it.task)
                     }.launchIn(this)
 
                     adapter.deleteTabTapped.onEach {

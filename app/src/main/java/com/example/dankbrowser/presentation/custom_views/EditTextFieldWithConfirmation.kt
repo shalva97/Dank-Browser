@@ -35,7 +35,7 @@ class EditTextFieldWithConfirmation @JvmOverloads constructor(
         backgroundColor = Color.WHITE
     }
 
-    fun onAddTask(callback: (taskName: String) -> Unit) {
+    fun onPositive(callback: (taskName: String) -> Unit) {
         addTaskCallback = callback
     }
 

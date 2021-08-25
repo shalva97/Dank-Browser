@@ -26,10 +26,20 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
         browserView = binding.browserGV
 
+        binding.urlBarEWC.onPositive {
+            viewModel.changeUrl(it)
+        }
+
+        binding.urlBarEWC.onCancel {
+            viewModel.hideUrlBar()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.selectedTab.onEach {
-                    binding.browserGV.setSession(it.geckoSession)
+                viewModel.selectedTask.onEach {
+                    if (binding.browserGV.session != it.selectedTab.getSession()) {
+                        binding.browserGV.setSession(it.selectedTab.getSession())
+                    }
                 }.launchIn(this)
 
                 viewModel.urlBar.onEach {

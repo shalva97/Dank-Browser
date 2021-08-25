@@ -39,7 +39,7 @@ class TabEntity : RealmObject {
 
         fun emptyTab(): TabEntity {
             return TabEntity().apply {
-                url = "http://youtube.com"
+                url = ""
                 contextId = "Default"
                 title = "Blank Tab"
             }

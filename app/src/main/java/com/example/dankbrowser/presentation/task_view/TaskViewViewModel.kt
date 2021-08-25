@@ -33,8 +33,8 @@ class TaskViewViewModel(
         taskList.deleteTask(task)
     }
 
-    fun switchToTab(tab: Tab) {
-        taskList.setSelectedTab(tab)
+    fun switchToTab(tab: Tab, task: Task) {
+        taskList.setSelectedTab(tab, task)
         navigation.tryEmit(R.id.action_taskView_to_geckoFragment)
     }
 

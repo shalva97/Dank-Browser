@@ -10,11 +10,21 @@ data class Tab(
     val title: String,
     val originalObject: TabEntity
 ) {
-    val geckoSession: GeckoSession by lazy {
-        GeckoSession()
+    lateinit var geckoSession: GeckoSession
+
+    fun isInitialized(): Boolean {
+        return ::geckoSession.isInitialized
+    }
+
+    fun getSession(): GeckoSession {
+        if (!::geckoSession.isInitialized) {
+            geckoSession = GeckoSession()
+        }
+        return geckoSession
     }
 
     fun loadWebsite(geckoRuntime: GeckoRuntime) {
+        getSession()
         if (!geckoSession.isOpen && url is Url.Website) {
             geckoSession.loadUri(url.url)
             geckoSession.open(geckoRuntime)
