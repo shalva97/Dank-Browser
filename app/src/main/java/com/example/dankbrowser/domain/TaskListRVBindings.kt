@@ -9,7 +9,7 @@ class TaskListRVBindings(private val list: List<Task>) : ITaskListRVBindings {
 
     override fun getItemCount(): Int {
         val tabCount = list.map { it.tabsList }.flatten().size
-        return list.size * TaskList.TASK_TITLE_AND_NEW_TAB_BTN + tabCount
+        return list.size * TASK_TITLE_AND_NEW_TAB_BTN + tabCount
     }
 
     override fun getItemAtIndex(index: Int): RVItem {
@@ -33,5 +33,9 @@ class TaskListRVBindings(private val list: List<Task>) : ITaskListRVBindings {
 
     override fun addOnDataChangedCallback(cb: () -> Unit) {
         dataChangeCallback = cb
+    }
+
+    companion object {
+        const val TASK_TITLE_AND_NEW_TAB_BTN = 2
     }
 }

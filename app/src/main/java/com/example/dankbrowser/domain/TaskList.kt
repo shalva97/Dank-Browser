@@ -69,8 +69,4 @@ class TaskList(
         this.selectedTask.tryEmit(task)
         return newElement
     }
-
-    companion object {
-        const val TASK_TITLE_AND_NEW_TAB_BTN = 2
-    }
 }
