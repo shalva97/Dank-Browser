@@ -7,6 +7,7 @@ import com.example.dankbrowser.components
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
 import com.example.dankbrowser.domain.TaskList
+import com.example.dankbrowser.getString
 import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -21,7 +22,7 @@ class TaskViewViewModel(
         if (taskName.isNotEmpty()) {
             taskList.addTask(taskName)
         } else {
-            taskList.addTask("Untitled")
+            taskList.addTask(getString(R.string.common_untitled))
         }
     }
 
