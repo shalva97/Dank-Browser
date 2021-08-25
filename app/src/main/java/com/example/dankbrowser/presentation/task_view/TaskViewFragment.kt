@@ -19,53 +19,59 @@ import kotlinx.coroutines.launch
 class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
 
     private val viewModel: TaskViewViewModel by viewModels()
-    private val adapter = TaskViewAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        FragmentTaskViewBinding.bind(view).init()
+    }
 
-        with(FragmentTaskViewBinding.bind(view)) {
-            adapter.taskList = viewModel.getRVData()
-            taskViewListRV.adapter = adapter
-            adapter.taskList.addOnDataChangedCallback {
-                adapter.notifyDataSetChanged()
-            }
+    private fun FragmentTaskViewBinding.init() {
+        val adapter = TaskViewAdapter()
 
-            addTaskBTN.setOnClickListener {
-                showAddTaskView()
-            }
+        adapter.taskList = viewModel.getRVData()
+        taskViewListRV.adapter = adapter
+        adapter.taskList.addOnDataChangedCallback {
+            adapter.notifyDataSetChanged()
+        }
 
-            addTaskATV.onCancel {
-                hideAddTaskView()
-            }
+        addTaskBTN.setOnClickListener {
+            showAddTaskView()
+        }
 
-            addTaskATV.onPositive {
-                viewModel.addTask(it)
-                hideAddTaskView()
-            }
+        addTaskATV.onCancel {
+            hideAddTaskView()
+        }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    adapter.deleteTaskTapped.onEach {
-                        viewModel.deleteTask(it.originalObject)
-                    }.launchIn(this)
+        addTaskATV.onPositive {
+            viewModel.addTask(it)
+            hideAddTaskView()
+        }
 
-                    adapter.tabTapped.onEach {
-                        viewModel.switchToTab(it.originalObject, it.task)
-                    }.launchIn(this)
+        setupRVListeners(adapter)
+    }
 
-                    adapter.deleteTabTapped.onEach {
-                        viewModel.deleteTab(it)
-                    }.launchIn(this)
+    private fun setupRVListeners(adapter: TaskViewAdapter) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.deleteTaskTapped.onEach {
+                    viewModel.deleteTask(it.originalObject)
+                }.launchIn(this)
 
-                    adapter.newTabTapped.onEach {
-                        viewModel.createNewTab(it)
-                    }.launchIn(this)
+                adapter.tabTapped.onEach {
+                    viewModel.switchToTab(it.originalObject, it.task)
+                }.launchIn(this)
 
-                    viewModel.navigation.onEach {
-                        findNavController().navigate(it)
-                    }.launchIn(this)
-                }
+                adapter.deleteTabTapped.onEach {
+                    viewModel.deleteTab(it)
+                }.launchIn(this)
+
+                adapter.newTabTapped.onEach {
+                    viewModel.createNewTab(it)
+                }.launchIn(this)
+
+                viewModel.navigation.onEach {
+                    findNavController().navigate(it)
+                }.launchIn(this)
             }
         }
     }

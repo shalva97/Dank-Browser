@@ -22,32 +22,33 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentGeckoBinding.bind(view)
+        FragmentGeckoBinding.bind(view).init()
+    }
 
-        browserView = binding.browserGV
+    private fun FragmentGeckoBinding.init() {
+        browserView = browserGV
 
-        binding.urlBarEWC.onPositive {
+        urlBarEWC.onPositive {
             viewModel.changeUrl(it)
         }
 
-        binding.urlBarEWC.onCancel {
+        urlBarEWC.onCancel {
             viewModel.hideUrlBar()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.selectedTask.onEach {
-                    if (binding.browserGV.session != it.selectedTab.getSession()) {
-                        binding.browserGV.setSession(it.selectedTab.getSession())
+                    if (browserGV.session != it.selectedTab.getSession()) {
+                        browserGV.setSession(it.selectedTab.getSession())
                     }
                 }.launchIn(this)
 
                 viewModel.urlBar.onEach {
-                    binding.urlBarEWC.isVisible = it
+                    urlBarEWC.isVisible = it
                 }.launchIn(this)
             }
         }
-
     }
 
     override fun onDestroy() {
