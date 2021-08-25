@@ -14,8 +14,8 @@ class TaskViewViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
-    val navigation = MutableSharedFlow<Int>(extraBufferCapacity = 1)
     private val taskList: TaskList = components.taskList
+    val navigation = MutableSharedFlow<Int>(extraBufferCapacity = 1)
 
     fun addTask(taskName: String) {
         if (taskName.isNotEmpty()) {

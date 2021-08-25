@@ -47,10 +47,10 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
             hideAddTaskView()
         }
 
-        setupRVListeners(adapter)
+        setupRVListenersAndNavigation(adapter)
     }
 
-    private fun setupRVListeners(adapter: TaskViewAdapter) {
+    private fun setupRVListenersAndNavigation(adapter: TaskViewAdapter) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.deleteTaskTapped.onEach {
