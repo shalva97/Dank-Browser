@@ -1,7 +1,9 @@
 package com.example.dankbrowser.presentation.task_view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -54,7 +56,9 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.deleteTaskTapped.onEach {
-                    viewModel.deleteTask(it.originalObject)
+                    showDeleteDialog(requireContext()) {
+                        viewModel.deleteTask(it.originalObject)
+                    }
                 }.launchIn(this)
 
                 adapter.tabTapped.onEach {
@@ -62,7 +66,9 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                 }.launchIn(this)
 
                 adapter.deleteTabTapped.onEach {
-                    viewModel.deleteTab(it)
+                    showDeleteDialog(requireContext()) {
+                        viewModel.deleteTab(it)
+                    }
                 }.launchIn(this)
 
                 adapter.newTabTapped.onEach {
@@ -74,6 +80,15 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                 }.launchIn(this)
             }
         }
+    }
+
+    private fun showDeleteDialog(context: Context, cb: () -> Unit) {
+        AlertDialog.Builder(context).apply {
+            setMessage(R.string.delete_task_dialog_title) // TODO pass tab/task name argument
+                .setPositiveButton(R.string.delete) { dialog, id ->
+                    cb.invoke()
+                }.setNegativeButton(R.string.common_cancel) { dialog, id -> }
+        }.create().show()
     }
 
     private fun FragmentTaskViewBinding.showAddTaskView() {

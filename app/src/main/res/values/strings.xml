@@ -7,4 +7,6 @@
     <string name="common_add">Add</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_untitled">Untitled</string>
+    <string name="delete">Delete</string>
+    <string name="delete_task_dialog_title">Are you sure you want to delete \"%s\" task</string>
 </resources>
