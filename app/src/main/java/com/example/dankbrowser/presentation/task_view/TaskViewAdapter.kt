@@ -1,11 +1,11 @@
 package com.example.dankbrowser.presentation.task_view
 
 import android.content.Context
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.NewTabRvItemBinding
 import com.example.dankbrowser.databinding.TabRvItemBinding
 import com.example.dankbrowser.databinding.TaskViewNameRvItemBinding
@@ -68,19 +68,20 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private fun showOverflowMenu(context: Context, anchor: View, itemAtIndex: RVItem.TaskUI) {
-        val menu = PopupMenu(context, anchor, Gravity.AXIS_PULL_AFTER)
+
+        val menu = PopupMenu(context, anchor)
 
         menu.menu.apply {
-            add("Rename").setOnMenuItemClickListener {
+            add(context.getString(R.string.task_overflow_menu_rename)).setOnMenuItemClickListener {
                 renameTaskTapped.tryEmit(itemAtIndex.originalObject)
                 true
             }
-            add("change context").setOnMenuItemClickListener {
+            add(context.getString(R.string.task_overflow_menu_change_context)).setOnMenuItemClickListener {
                 changeContextTapped.tryEmit(itemAtIndex.originalObject)
                 true
             }
 
-            add("delete").setOnMenuItemClickListener {
+            add(context.getString(R.string.task_overflow_menu_delete)).setOnMenuItemClickListener {
                 deleteTaskTapped.tryEmit(itemAtIndex)
                 true
             }

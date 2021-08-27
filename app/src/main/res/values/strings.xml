@@ -9,4 +9,7 @@
     <string name="common_untitled">Untitled</string>
     <string name="delete">Delete</string>
     <string name="delete_task_dialog_title">Are you sure you want to delete \"%s\" task</string>
+    <string name="task_overflow_menu_rename">Rename</string>
+    <string name="task_overflow_menu_change_context">change context</string>
+    <string name="task_overflow_menu_delete">delete</string>
 </resources>
