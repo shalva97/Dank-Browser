@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.mozilla.geckoview.GeckoRuntime
+import org.mozilla.geckoview.GeckoSession
 
 class GeckoViewModel(
     application: Application,
@@ -22,14 +23,27 @@ class GeckoViewModel(
     val urlBar = MutableSharedFlow<Boolean>(1, 1)
 
     init {
-        selectedTask.onEach {
-            if (it.selectedTab.url is Url.Empty) {
+        selectedTask.onEach { task ->
+            if (task.selectedTab.url is Url.Empty) {
                 urlBar.tryEmit(true)
             } else {
-                it.selectedTab.loadWebsite(geckoRuntime)
+                task.selectedTab.loadWebsite(geckoRuntime)
                 hideUrlBar()
             }
+
+            task.selectedTab.geckoSession.navigationDelegate = navigationDelegate()
         }.launchIn(viewModelScope)
+    }
+
+    private fun navigationDelegate(): GeckoSession.NavigationDelegate {
+        return object : GeckoSession.NavigationDelegate {
+            override fun onLocationChange(session: GeckoSession, url: String?) {
+                if (url != null) {
+                    changeUrl(url)
+                }
+            }
+
+        }
     }
 
     fun changeUrl(url: String) {
