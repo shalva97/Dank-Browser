@@ -1,6 +1,5 @@
 package com.example.dankbrowser.data
 
-import android.os.Looper
 import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.data.TaskEntity.Companion.toTask
 import com.example.dankbrowser.domain.Tab
@@ -19,10 +18,7 @@ class TaskRepository(private val realm: Realm) {
         val taskEntity = TaskEntity.emptyTask()
         taskEntity.name = taskName
 
-        println((Looper.myLooper() == Looper.getMainLooper()).toString() + " asdfasdf")
-
         return realm.writeBlocking {
-            println((Looper.myLooper() == Looper.getMainLooper()).toString() + " inside blokin")
             copyToRealm(taskEntity)
         }.toTask()
     }
