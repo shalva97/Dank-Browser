@@ -40,19 +40,25 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
             showAddTaskView()
         }
 
-        addTaskATV.onCancel {
+        addTaskETFWC.onCancel {
             hideAddTaskView()
         }
 
-        addTaskATV.onPositive {
+        addTaskETFWC.onPositive {
             viewModel.addTask(it)
             hideAddTaskView()
         }
 
-        setupRVListenersAndNavigation(adapter)
-    }
+        changeContextETFWC.changeHint("context name")
 
-    private fun setupRVListenersAndNavigation(adapter: TaskViewAdapter) {
+        changeContextETFWC.onCancel {
+            hideChangeContextField()
+        }
+        changeContextETFWC.onPositive {
+            viewModel.changeContext(it)
+            hideChangeContextField()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.deleteTaskTapped.onEach {
@@ -75,6 +81,10 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                     viewModel.createNewTab(it)
                 }.launchIn(this)
 
+                adapter.changeContextTapped.onEach {
+                    showChangeContextField()
+                }.launchIn(this)
+
                 viewModel.navigation.onEach {
                     findNavController().navigate(it)
                 }.launchIn(this)
@@ -93,13 +103,25 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
 
     private fun FragmentTaskViewBinding.showAddTaskView() {
         addTaskBTN.isVisible = false
-        addTaskATV.isVisible = true
-        hideKeyboard()
+        addTaskETFWC.isVisible = true
+        addTaskETFWC.showKeyboard()
     }
 
     private fun FragmentTaskViewBinding.hideAddTaskView() {
         addTaskBTN.isVisible = true
-        addTaskATV.isVisible = false
+        addTaskETFWC.isVisible = false
         hideKeyboard()
+    }
+
+    private fun FragmentTaskViewBinding.hideChangeContextField() {
+        addTaskBTN.isVisible = true
+        changeContextETFWC.isVisible = false
+        hideKeyboard()
+    }
+
+    private fun FragmentTaskViewBinding.showChangeContextField() {
+        addTaskBTN.isVisible = false
+        changeContextETFWC.isVisible = true
+        changeContextETFWC.showKeyboard()
     }
 }

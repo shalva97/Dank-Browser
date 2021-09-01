@@ -69,4 +69,15 @@ class TaskList(
         this.selectedTask.tryEmit(task)
         return newElement
     }
+
+    fun changeContext(task: Task, contextName: String) {
+        // savee task and objects in it
+
+        // first variant
+        // save data as usual and remap everything  one by one
+
+        // make task fields mutable and update directly
+
+        // look at other projects and imitate
+    }
 }

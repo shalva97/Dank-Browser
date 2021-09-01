@@ -46,4 +46,8 @@ class TaskViewViewModel(
     fun deleteTab(it: Pair<Task, Tab>) {
         taskList.removeTab(it.first, it.second)
     }
+
+    fun changeContext(it: String) {
+
+    }
 }

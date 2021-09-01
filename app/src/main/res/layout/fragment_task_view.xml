@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
-        android:id="@+id/addTaskATV"
+        android:id="@+id/addTaskETFWC"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -37,6 +37,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
+
+    <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
+        android:id="@+id/changeContextETFWC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/bottomBarrier"

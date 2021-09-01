@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.dankbrowser.databinding.AddTaskViewBinding
+import com.example.dankbrowser.showKeyboard
 import splitties.views.backgroundColor
 
 class EditTextFieldWithConfirmation @JvmOverloads constructor(
@@ -17,19 +18,18 @@ class EditTextFieldWithConfirmation @JvmOverloads constructor(
 
     private lateinit var addTaskCallback: (taskName: String) -> Unit
     private lateinit var cancelCallback: () -> Unit
+    private val binding = AddTaskViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
-        val binding = AddTaskViewBinding.inflate(LayoutInflater.from(context), this)
-
         with(binding) {
             addBTN.setOnClickListener {
-                addTaskCallback.invoke(taskNameET.text.toString())
-                taskNameET.setText("")
+                addTaskCallback.invoke(nameET.text.toString())
+                nameET.setText("")
             }
 
             cancelBTN.setOnClickListener {
                 cancelCallback.invoke()
-                taskNameET.setText("")
+                nameET.setText("")
             }
         }
         backgroundColor = Color.WHITE
@@ -41,6 +41,14 @@ class EditTextFieldWithConfirmation @JvmOverloads constructor(
 
     fun onCancel(cb: () -> Unit) {
         cancelCallback = cb
+    }
+
+    fun showKeyboard() {
+        binding.nameET.showKeyboard()
+    }
+
+    fun changeHint(hint: String) {
+        binding.nameET.hint = hint
     }
 
 }
