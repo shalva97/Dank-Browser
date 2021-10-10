@@ -38,11 +38,10 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.selectedTask.onEach {
-                    if (browserGV.session != it.selectedTab.getSession()) {
-                        browserGV.setSession(it.selectedTab.getSession())
-                    }
-                }.launchIn(this)
+                val currentTask = viewModel.selectedTask
+                if (browserGV.session != currentTask.selectedTab.getSession()) {
+                    browserGV.setSession(currentTask.selectedTab.getSession())
+                }
 
                 viewModel.urlBar.onEach {
                     urlBarEWC.isVisible = it
