@@ -13,12 +13,10 @@ import com.example.dankbrowser.databinding.FragmentGeckoBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.mozilla.geckoview.GeckoView
 
 class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
     private val viewModel: GeckoViewModel by viewModels()
-    private var browserView: GeckoView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,7 +24,6 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
     }
 
     private fun FragmentGeckoBinding.init() {
-        browserView = browserGV
 
         urlBarEWC.onPositive {
             viewModel.changeUrl(it)
@@ -53,11 +50,9 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
                     loader.isVisible = it
                 }.launchIn(this)
             }
+            repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                browserGV.releaseSession()
+            }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        browserView?.releaseSession()
     }
 }
