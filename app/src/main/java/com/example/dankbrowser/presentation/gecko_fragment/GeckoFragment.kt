@@ -36,6 +36,8 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             viewModel.hideUrlBar()
         }
 
+        urlBarEWC.changeHint(getString(R.string.enter_url))
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 val currentTask = viewModel.selectedTask
@@ -45,6 +47,10 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
                 viewModel.urlBar.onEach {
                     urlBarEWC.isVisible = it
+                }.launchIn(this)
+
+                viewModel.loading.onEach {
+                    loader.isVisible = it
                 }.launchIn(this)
             }
         }

@@ -18,6 +18,7 @@ class GeckoViewModel(
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
     val selectedTask = taskList.selectedTask
     val urlBar = MutableSharedFlow<Boolean>(1, 1)
+    val loading = MutableSharedFlow<Boolean>(1, 1)
 
     init {
         if (selectedTask.selectedTab.url is Url.Empty) {
@@ -25,6 +26,7 @@ class GeckoViewModel(
         } else {
             selectedTask.selectedTab.loadWebsite(geckoRuntime)
             selectedTask.selectedTab.geckoSession.navigationDelegate = navigationDelegate()
+            selectedTask.selectedTab.geckoSession.progressDelegate = progressDelegate()
             hideUrlBar()
         }
     }
@@ -35,6 +37,21 @@ class GeckoViewModel(
                 if (url != null) {
                     changeUrl(url)
                 }
+            }
+
+        }
+    }
+
+    private fun progressDelegate(): GeckoSession.ProgressDelegate {
+        return object : GeckoSession.ProgressDelegate {
+            override fun onPageStart(session: GeckoSession, url: String) {
+                super.onPageStart(session, url)
+                loading.tryEmit(true)
+            }
+
+            override fun onPageStop(session: GeckoSession, success: Boolean) {
+                super.onPageStop(session, success)
+                loading.tryEmit(false)
             }
 
         }
