@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id("io.realm.kotlin") version "0.4.1"
+    id "io.realm.kotlin" version "0.6.0"
 }
 
 android {
@@ -58,7 +58,9 @@ dependencies {
     implementation("com.louiscad.splitties:splitties-fun-pack-android-base:3.0.0-beta03")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
 
-    implementation("io.realm.kotlin:library:0.4.1")
+//    implementation("io.realm.kotlin:library:0.6.0")
+    implementation("io.realm.kotlin:library-base:0.6.0")
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
