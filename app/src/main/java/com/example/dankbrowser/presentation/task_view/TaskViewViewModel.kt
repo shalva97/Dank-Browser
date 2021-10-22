@@ -26,7 +26,7 @@ class TaskViewViewModel(
         }
     }
 
-    fun getRVData(): ITaskListRVBindings {
+    fun getTaskListDataForRV(): ITaskListRVBindings {
         return taskList
     }
 

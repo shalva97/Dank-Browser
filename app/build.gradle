@@ -39,7 +39,7 @@ android {
 ext {
     geckoviewChannel = "nightly"
     geckoviewVersion = "91.0.20210705095222"
-    lifecycle_version = "2.4.0-alpha03"
+    lifecycle_version = "2.4.0-rc01"
 }
 
 dependencies {
@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
 
     implementation "org.mozilla.geckoview:geckoview-${geckoviewChannel}:${geckoviewVersion}"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'

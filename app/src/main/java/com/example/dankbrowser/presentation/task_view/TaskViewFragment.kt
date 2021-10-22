@@ -30,7 +30,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
     private fun FragmentTaskViewBinding.init() {
         val adapter = TaskViewAdapter()
 
-        adapter.taskList = viewModel.getRVData()
+        adapter.taskList = viewModel.getTaskListDataForRV()
         taskViewListRV.adapter = adapter
         adapter.taskList.addOnDataChangedCallback {
             adapter.notifyDataSetChanged()
@@ -49,7 +49,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
             hideAddTaskView()
         }
 
-        changeContextETFWC.changeHint("context name")
+        changeContextETFWC.changeHint(getString(R.string.context_name))
 
         changeContextETFWC.onCancel {
             hideChangeContextField()
