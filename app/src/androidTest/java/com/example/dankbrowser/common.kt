@@ -7,6 +7,7 @@ import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.domain.TaskList
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.objects
 
 val components = Components(
     InstrumentationRegistry.getInstrumentation().targetContext
@@ -14,8 +15,8 @@ val components = Components(
 
 fun getNewTaskList(): TaskList {
     val realm by lazy {
-        val config = RealmConfiguration(schema = setOf(TaskEntity::class, TabEntity::class))
-        Realm(config).also {
+        val config = RealmConfiguration.with(schema = setOf(TaskEntity::class, TabEntity::class))
+        Realm.open(config).also {
             it.writeBlocking {
                 objects<TaskEntity>().delete()
                 objects<TabEntity>().delete()
