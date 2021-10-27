@@ -23,8 +23,8 @@ class Components(context: Context) {
     }
 
     private val realm by lazy {
-        val config = RealmConfiguration(schema = setOf(TaskEntity::class, TabEntity::class))
-        Realm(config)
+        val config = RealmConfiguration.with(schema = setOf(TaskEntity::class, TabEntity::class))
+        Realm.open(config)
     }
 
     private val realmDatabase by lazy {

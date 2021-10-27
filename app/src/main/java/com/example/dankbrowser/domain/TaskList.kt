@@ -2,8 +2,6 @@ package com.example.dankbrowser.domain
 
 import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import org.jetbrains.annotations.TestOnly
 
 class TaskList(
@@ -11,7 +9,8 @@ class TaskList(
     private var list: MutableList<Task> = mutableListOf()
 ) : ITaskListRVBindings by TaskListRVBindings(list) {
 
-    private val selectedTask = MutableSharedFlow<Task>(1, 1)
+    lateinit var selectedTask: Task
+        private set
 
     init {
         val results = taskRepository.getAll()
@@ -46,11 +45,7 @@ class TaskList(
 
     fun setSelectedTab(tab: Tab, task: Task) {
         task.selectedTab = tab
-        selectedTask.tryEmit(task)
-    }
-
-    fun getSelectedTab(): SharedFlow<Task> {
-        return selectedTask
+        selectedTask = task
     }
 
     @TestOnly
@@ -66,7 +61,7 @@ class TaskList(
         task.tabsList.add(index, newElement)
         task.selectedTab = newElement
 
-        this.selectedTask.tryEmit(task)
+        this.selectedTask = task
         return newElement
     }
 

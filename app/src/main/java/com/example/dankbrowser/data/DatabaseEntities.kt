@@ -7,6 +7,7 @@ import com.example.dankbrowser.domain.Task
 import com.example.dankbrowser.domain.Url
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.realmListOf
 
 class TabEntity : RealmObject {
     var url: String = ""
@@ -51,7 +52,7 @@ class TabEntity : RealmObject {
 class TaskEntity : RealmObject {
     var name: String = ""
     var contextId: String = ""
-    var tabs: RealmList<TabEntity> = RealmList()
+    var tabs: RealmList<TabEntity> = realmListOf()
 
     companion object {
 
@@ -68,7 +69,7 @@ class TaskEntity : RealmObject {
                 TabEntity.toEntity(it)
             }
 
-            val realmList = RealmList<TabEntity>()
+            val realmList = realmListOf<TabEntity>()
             realmList.addAll(items)
 
             return TaskEntity().apply {
