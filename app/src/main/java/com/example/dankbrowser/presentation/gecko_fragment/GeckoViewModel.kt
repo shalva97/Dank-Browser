@@ -2,9 +2,7 @@ package com.example.dankbrowser.presentation.gecko_fragment
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.components
 import com.example.dankbrowser.domain.TaskList
@@ -19,13 +17,13 @@ class GeckoViewModel(
 
     private val taskList: TaskList = components.taskList
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
-    val selectedTask = taskList.selectedTask.asLiveData()
-    val urlBar = MutableSharedFlow<Boolean>(1, 1)
+    val selectedTask = taskList.selectedTask
+    val urlBar = MutableLiveData<Boolean>()
     val loading = MutableSharedFlow<Boolean>(1, 1)
 
     init {
         if (selectedTask.selectedTab.url is Url.Empty) {
-            urlBar.tryEmit(true)
+            urlBar.postValue(true)
         } else {
             selectedTask.selectedTab.loadWebsite(geckoRuntime)
             selectedTask.selectedTab.geckoSession.navigationDelegate = navigationDelegate()

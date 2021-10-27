@@ -6,10 +6,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.FragmentGeckoBinding
-import org.mozilla.geckoview.GeckoView
 
 class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
@@ -30,17 +30,18 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             viewModel.hideUrlBar()
         }
 
-        viewModel.selectedTask.observe(viewLifecycleOwner) {
-            if (browserGV.session != it.selectedTab.getSession()) {
-                browserGV.setSession(it.selectedTab.getSession())
-            }
+        if (browserGV.session != viewModel.selectedTask.selectedTab.getSession()) {
+            browserGV.setSession(viewModel.selectedTask.selectedTab.getSession())
         }
 
         viewModel.urlBar.observe(viewLifecycleOwner) {
             urlBarEWC.isVisible = it
         }
-        repeatOnLifecycle(Lifecycle.State.DESTROYED) {
-            browserGV.releaseSession()
+
+        lifecycleScope.launchWhenCreated {
+            repeatOnLifecycle(Lifecycle.State.DESTROYED) {
+                browserGV.releaseSession()
+            }
         }
     }
 }
