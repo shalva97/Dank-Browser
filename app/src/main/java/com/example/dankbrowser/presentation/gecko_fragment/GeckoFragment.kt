@@ -30,8 +30,8 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             viewModel.hideUrlBar()
         }
 
-        if (browserGV.session != viewModel.selectedTask.selectedTab.getSession()) {
-            browserGV.setSession(viewModel.selectedTask.selectedTab.getSession())
+        if (browserGV.session != viewModel.selectedTask.selectedTab.geckoSession) {
+            browserGV.setSession(viewModel.selectedTask.selectedTab.geckoSession)
         }
 
         viewModel.urlBar.observe(viewLifecycleOwner) {
@@ -42,6 +42,10 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             repeatOnLifecycle(Lifecycle.State.DESTROYED) {
                 browserGV.releaseSession()
             }
+        }
+
+        viewModel.loading.observe(viewLifecycleOwner) {
+            loader.isVisible = it
         }
     }
 }

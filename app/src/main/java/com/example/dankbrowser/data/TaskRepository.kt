@@ -51,9 +51,9 @@ class TaskRepository(private val realm: Realm) {
         }
 
         val newElement = tabEntity!!.toTab()
-        if (selectedTab.isInitialized()) {
-            newElement.geckoSession = selectedTab.geckoSession
-        }
+//        if (selectedTab.isInitialized()) {
+//            newElement.geckoSession = selectedTab.geckoSession
+//        }
 
         return newElement
 

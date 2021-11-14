@@ -7,7 +7,6 @@ import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.components
 import com.example.dankbrowser.domain.TaskList
 import com.example.dankbrowser.domain.Url
-import kotlinx.coroutines.flow.MutableSharedFlow
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoSession
 
@@ -19,7 +18,7 @@ class GeckoViewModel(
     private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
     val selectedTask = taskList.selectedTask
     val urlBar = MutableLiveData<Boolean>()
-    val loading = MutableSharedFlow<Boolean>(1, 1)
+    val loading = MutableLiveData<Boolean>()
 
     init {
         if (selectedTask.selectedTab.url is Url.Empty) {
@@ -47,12 +46,12 @@ class GeckoViewModel(
         return object : GeckoSession.ProgressDelegate {
             override fun onPageStart(session: GeckoSession, url: String) {
                 super.onPageStart(session, url)
-                loading.tryEmit(true)
+                loading.postValue(true)
             }
 
             override fun onPageStop(session: GeckoSession, success: Boolean) {
                 super.onPageStop(session, success)
-                loading.tryEmit(false)
+                loading.postValue(false)
             }
 
         }

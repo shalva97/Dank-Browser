@@ -10,24 +10,14 @@ data class Tab(
     val title: String,
     val originalObject: TabEntity
 ) {
-    lateinit var geckoSession: GeckoSession
-
-    fun isInitialized(): Boolean {
-        return ::geckoSession.isInitialized
-    }
-
-    fun getSession(): GeckoSession {
-        if (!::geckoSession.isInitialized) {
-            geckoSession = GeckoSession()
-        }
-        return geckoSession
+    val geckoSession: GeckoSession by lazy {
+        GeckoSession()
     }
 
     fun loadWebsite(geckoRuntime: GeckoRuntime) {
-        getSession()
         if (!geckoSession.isOpen && url is Url.Website) {
-            geckoSession.loadUri(url.url)
             geckoSession.open(geckoRuntime)
+            geckoSession.loadUri("https://youtube.com")
         }
     }
 }
