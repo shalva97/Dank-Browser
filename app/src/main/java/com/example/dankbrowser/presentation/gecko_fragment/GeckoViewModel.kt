@@ -58,7 +58,7 @@ class GeckoViewModel(
     }
 
     fun changeUrl(url: String) {
-        taskList.changeUrl(selectedTask.selectedTab, url, selectedTask)
+        selectedTask.selectedTab.changeUrl(url)
     }
 
     fun hideUrlBar() {

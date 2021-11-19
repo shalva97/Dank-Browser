@@ -5,6 +5,7 @@ import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
 import com.example.dankbrowser.domain.Url
+import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.realmListOf
@@ -16,13 +17,19 @@ class TabEntity : RealmObject {
 
     companion object {
 
-        fun TabEntity.toTab(): Tab {
+        fun TabEntity.toTab(realm: Realm): Tab {
             val tabUrl = if (url.isEmpty()) {
                 Url.Empty
             } else {
                 Url.Website(url)
             }
-            return Tab(url = tabUrl, contextId = contextId, title = title, originalObject = this)
+            return Tab(
+                url = tabUrl,
+                contextId = contextId,
+                title = title,
+                originalObject = this,
+                realm = realm
+            )
         }
 
         fun toEntity(tab: Tab): TabEntity {
@@ -56,28 +63,28 @@ class TaskEntity : RealmObject {
 
     companion object {
 
-        fun TaskEntity.toTask(): Task {
+        fun TaskEntity.toTask(realm: Realm): Task {
             return Task(name, contextId, originalObject = this).apply {
                 tabs.forEach { tabEntity ->
-                    addTab(tabEntity.toTab())
+                    addTab(tabEntity.toTab(realm))
                 }
             }
         }
 
-        fun toEntity(task: Task): TaskEntity {
-            val items = task.tabsList.map {
-                TabEntity.toEntity(it)
-            }
-
-            val realmList = realmListOf<TabEntity>()
-            realmList.addAll(items)
-
-            return TaskEntity().apply {
-                name = task.name
-                contextId = task.contextId
-                tabs = task.tabsList.map { it.originalObject } as RealmList<TabEntity>
-            }
-        }
+//        fun toEntity(task: Task): TaskEntity {
+//            val items = task.tabsList.map {
+//                TabEntity.toEntity(it)
+//            }
+//
+//            val realmList = realmListOf<TabEntity>()
+//            realmList.addAll(items)
+//
+//            return TaskEntity().apply {
+//                name = task.name
+//                contextId = task.contextId
+//                tabs = task.tabsList.map { it.originalObject } as RealmList<TabEntity>
+//            }
+//        }
 
         fun emptyTask(): TaskEntity {
             return TaskEntity().apply {

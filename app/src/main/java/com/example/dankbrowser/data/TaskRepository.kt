@@ -1,6 +1,5 @@
 package com.example.dankbrowser.data
 
-import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.data.TaskEntity.Companion.toTask
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
@@ -10,7 +9,7 @@ import io.realm.delete
 class TaskRepository(private val realm: Realm) {
 
     fun getAll(): List<Task> {
-        return realm.objects(TaskEntity::class).map { it.toTask() }
+        return realm.objects(TaskEntity::class).map { it.toTask(realm) }
     }
 
     fun addTask(taskName: String): Task {
@@ -20,7 +19,7 @@ class TaskRepository(private val realm: Realm) {
 
         return realm.writeBlocking {
             copyToRealm(taskEntity)
-        }.toTask()
+        }.toTask(realm)
     }
 
     fun deleteTask(task: Task) {
@@ -34,28 +33,12 @@ class TaskRepository(private val realm: Realm) {
             val tab = copyToRealm(TabEntity.emptyTab())
             findLatest(task.originalObject)?.tabs?.add(tab)
             copyToRealm(task.originalObject)
-        }.toTask().tabsList.last()
+        }.toTask(realm).tabsList.last()
     }
 
     fun removeTab(tab: Tab) {
         realm.writeBlocking {
-            findLatest(tab.originalObject)?.delete()
+//            findLatest(tab.originalObject)?.delete() // TODO
         }
-    }
-
-    fun changeUrl(selectedTab: Tab, url: String): Tab {
-        val tabEntity = realm.writeBlocking {
-            findLatest(selectedTab.originalObject)?.apply {
-                this.url = url
-            }
-        }
-
-        val newElement = tabEntity!!.toTab()
-//        if (selectedTab.isInitialized()) {
-//            newElement.geckoSession = selectedTab.geckoSession
-//        }
-
-        return newElement
-
     }
 }

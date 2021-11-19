@@ -53,17 +53,17 @@ class TaskList(
         return list
     }
 
-    fun changeUrl(selectedTab: Tab, url: String, task: Task): Tab {
-        val index = task.tabsList.indexOf(selectedTab)
-        val newElement = taskRepository.changeUrl(selectedTab, url)
-
-        task.tabsList.removeAt(index)
-        task.tabsList.add(index, newElement)
-        task.selectedTab = newElement
-
-        this.selectedTask = task
-        return newElement
-    }
+//    fun changeUrl(selectedTab: Tab, url: String, task: Task): Tab {
+//        val index = task.tabsList.indexOf(selectedTab)
+//        val newElement = taskRepository.changeUrl(selectedTab, url)
+//
+//        task.tabsList.removeAt(index)
+//        task.tabsList.add(index, newElement)
+//        task.selectedTab = newElement
+//
+//        this.selectedTask = task
+//        return newElement
+//    }
 
     fun changeContext(task: Task, contextName: String) {
         // savee task and objects in it
