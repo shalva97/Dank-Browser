@@ -3,6 +3,7 @@ package com.example.dankbrowser.presentation.gecko_fragment
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.components
@@ -23,7 +24,7 @@ class GeckoViewModel(
     val selectedTask = taskList.selectedTask
     val urlBar = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
-    val pageTitle = MutableLiveData<String>()
+    val pageTitle = selectedTask.selectedTab.title.asLiveData(viewModelScope.coroutineContext)
 
     init {
         selectedTask.selectedTab.geckoSession.navigationDelegate = navigationDelegate()
@@ -57,7 +58,7 @@ class GeckoViewModel(
         return object : GeckoSession.ContentDelegate {
             override fun onTitleChange(session: GeckoSession, title: String?) {
                 title?.let {
-                    pageTitle.postValue(it)
+                    selectedTask.selectedTab.saveTitle(it)
                 }
             }
         }

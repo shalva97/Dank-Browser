@@ -28,7 +28,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
     }
 
     private fun FragmentTaskViewBinding.init() {
-        val adapter = TaskViewAdapter()
+        val adapter = TaskViewAdapter(viewLifecycleOwner.lifecycleScope)
 
         adapter.taskList = viewModel.getTaskListDataForRV()
         taskViewListRV.adapter = adapter

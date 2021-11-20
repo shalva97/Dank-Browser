@@ -13,14 +13,14 @@ data class Tab(
 
     val url: MutableStateFlow<Url> = MutableStateFlow(Url.Empty)
     val contextId: String
-    val title: String
+    val title = MutableStateFlow<String>("")
 
     init {
         if (originalObject.url.isNotEmpty()) {
             url.tryEmit(Url.Website(originalObject.url))
         }
         contextId = originalObject.contextId
-        title = originalObject.title
+        title.tryEmit(originalObject.title)
     }
 
     val geckoSession: GeckoSession by lazy {
@@ -47,6 +47,15 @@ data class Tab(
             }!!
         }
         this.url.tryEmit(Url.Website(url))
+    }
+
+    fun saveTitle(title: String) {
+        realm.writeBlocking {
+            originalObject = findLatest(originalObject)?.apply {
+                this.title = title
+            }!!
+        }
+        this.title.tryEmit(title)
     }
 
     sealed class Url {

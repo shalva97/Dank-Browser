@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.NewTabRvItemBinding
@@ -15,8 +16,11 @@ import com.example.dankbrowser.presentation.task_view.models.ITaskListRVBindings
 import com.example.dankbrowser.presentation.task_view.models.rv_types.RVItem
 import com.example.dankbrowser.presentation.task_view.models.rv_types.RVViewTypes
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TaskViewAdapter(private val lifecycleScope: LifecycleCoroutineScope) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     lateinit var taskList: ITaskListRVBindings
     val tabTapped = MutableSharedFlow<RVItem.TabUI>(0, 1)
@@ -42,7 +46,11 @@ class TaskViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             is RVItem.TabUI -> {
                 TabRvItemBinding.bind(holder.itemView).apply {
-                    titleTV.text = itemAtIndex.name
+
+                    itemAtIndex.name.onEach {
+                        titleTV.text = it
+                    }.launchIn(lifecycleScope)
+
                     root.setOnClickListener {
                         tabTapped.tryEmit(itemAtIndex)
                     }
