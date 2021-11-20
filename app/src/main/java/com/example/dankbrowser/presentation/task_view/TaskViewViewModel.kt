@@ -50,4 +50,8 @@ class TaskViewViewModel(
     fun changeContext(it: String) {
 
     }
+
+    fun renameTask(task: Task, name: String) {
+        task.changeName(name)
+    }
 }

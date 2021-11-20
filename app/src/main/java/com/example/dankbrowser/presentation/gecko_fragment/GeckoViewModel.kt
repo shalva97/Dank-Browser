@@ -21,7 +21,7 @@ class GeckoViewModel(
     val loading = MutableLiveData<Boolean>()
 
     init {
-        if (selectedTask.selectedTab.url is Tab.Url.Empty) {
+        if (selectedTask.selectedTab.url.value is Tab.Url.Empty) {
             urlBar.postValue(true)
         } else {
             selectedTask.selectedTab.loadWebsite(geckoRuntime)
@@ -35,7 +35,7 @@ class GeckoViewModel(
         return object : GeckoSession.NavigationDelegate {
             override fun onLocationChange(session: GeckoSession, url: String?) {
                 if (url != null) {
-                    changeUrl(url)
+                    saveUrl(url)
                 }
             }
 
@@ -57,8 +57,12 @@ class GeckoViewModel(
         }
     }
 
-    fun changeUrl(url: String) {
-        selectedTask.selectedTab.changeUrl(url)
+    fun loadUrl(url: String) {
+        selectedTask.selectedTab.saveAndLoadUrl(url)
+    }
+
+    fun saveUrl(url: String) {
+        selectedTask.selectedTab.saveUrl(url)
     }
 
     fun hideUrlBar() {

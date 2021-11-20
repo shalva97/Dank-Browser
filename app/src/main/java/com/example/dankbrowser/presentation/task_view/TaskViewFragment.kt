@@ -88,6 +88,10 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
                 viewModel.navigation.onEach {
                     findNavController().navigate(it)
                 }.launchIn(this)
+
+                adapter.renameTaskTapped.onEach {
+                    viewModel.renameTask(it, "somethingn else")
+                }.launchIn(this)
             }
         }
     }

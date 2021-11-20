@@ -23,7 +23,7 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
     private fun FragmentGeckoBinding.init() {
 
         urlBarEWC.onPositive {
-            viewModel.changeUrl(it)
+            viewModel.loadUrl(it)
         }
 
         urlBarEWC.onCancel {
