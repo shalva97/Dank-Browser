@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.FragmentGeckoBinding
+import com.example.dankbrowser.hideKeyboard
 
 class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
@@ -36,6 +37,7 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
         viewModel.urlBar.observe(viewLifecycleOwner) {
             urlBarEWC.isVisible = it
+            hideKeyboard()
         }
 
         lifecycleScope.launchWhenCreated {
