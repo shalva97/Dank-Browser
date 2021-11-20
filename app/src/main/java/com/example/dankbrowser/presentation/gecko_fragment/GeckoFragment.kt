@@ -49,5 +49,9 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
         viewModel.loading.observe(viewLifecycleOwner) {
             loader.isVisible = it
         }
+
+        viewModel.pageTitle.observe(viewLifecycleOwner) {
+            pageTitleTV.text = it
+        }
     }
 }

@@ -23,10 +23,12 @@ class GeckoViewModel(
     val selectedTask = taskList.selectedTask
     val urlBar = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
+    val pageTitle = MutableLiveData<String>()
 
     init {
         selectedTask.selectedTab.geckoSession.navigationDelegate = navigationDelegate()
         selectedTask.selectedTab.geckoSession.progressDelegate = progressDelegate()
+        selectedTask.selectedTab.geckoSession.contentDelegate = pageTitleDelegate()
 
         viewModelScope.launch {
             selectedTask.selectedTab.url.onEach {
@@ -51,15 +53,23 @@ class GeckoViewModel(
         }
     }
 
+    private fun pageTitleDelegate(): GeckoSession.ContentDelegate {
+        return object : GeckoSession.ContentDelegate {
+            override fun onTitleChange(session: GeckoSession, title: String?) {
+                title?.let {
+                    pageTitle.postValue(it)
+                }
+            }
+        }
+    }
+
     private fun progressDelegate(): GeckoSession.ProgressDelegate {
         return object : GeckoSession.ProgressDelegate {
             override fun onPageStart(session: GeckoSession, url: String) {
-                super.onPageStart(session, url)
                 loading.postValue(true)
             }
 
             override fun onPageStop(session: GeckoSession, success: Boolean) {
-                super.onPageStop(session, success)
                 loading.postValue(false)
             }
 

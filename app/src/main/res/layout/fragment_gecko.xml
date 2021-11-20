@@ -26,6 +26,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/pageTitleTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorOnPrimary"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:elevation="2dp"
+        tools:text="some random page title" />
+
     <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
         android:id="@+id/urlBarEWC"
         android:layout_width="0dp"
