@@ -40,6 +40,15 @@ class Tab(
             geckoSession.navigationDelegate = navigationDelegate(::saveUrl)
             geckoSession.progressDelegate = progressDelegate(isLoading::tryEmit)
             geckoSession.contentDelegate = contentDelegate(::saveTitle, isFullscreen::tryEmit)
+            // TODO add onChoicePrompt
+//            geckoSession.promptDelegate =  object : GeckoSession.PromptDelegate {
+//                override fun onChoicePrompt(
+//                    session: GeckoSession,
+//                    prompt: GeckoSession.PromptDelegate.ChoicePrompt
+//                ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+//                    return super.onChoicePrompt(session, prompt)
+//                }
+//            }
         }
     }
 
