@@ -48,4 +48,10 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/fullscreenGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="pageTitleTV" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

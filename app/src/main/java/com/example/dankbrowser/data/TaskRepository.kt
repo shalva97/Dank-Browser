@@ -5,11 +5,12 @@ import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
 import io.realm.Realm
 import io.realm.delete
+import org.mozilla.geckoview.GeckoRuntime
 
-class TaskRepository(private val realm: Realm) {
+class TaskRepository(private val realm: Realm, val geckoRuntime: GeckoRuntime) {
 
     fun getAll(): List<Task> {
-        return realm.objects(TaskEntity::class).map { it.toTask(realm) }
+        return realm.objects(TaskEntity::class).map { it.toTask(realm, geckoRuntime) }
     }
 
     fun addTask(taskName: String): Task {
@@ -19,7 +20,7 @@ class TaskRepository(private val realm: Realm) {
 
         return realm.writeBlocking {
             copyToRealm(taskEntity)
-        }.toTask(realm)
+        }.toTask(realm, geckoRuntime)
     }
 
     fun deleteTask(task: Task) {
@@ -33,7 +34,7 @@ class TaskRepository(private val realm: Realm) {
             val tab = copyToRealm(TabEntity.emptyTab())
             findLatest(task.originalObject)?.tabs?.add(tab)
             copyToRealm(task.originalObject)
-        }.toTask(realm).tabsList.last()
+        }.toTask(realm, geckoRuntime).tabsList.last()
     }
 
     fun removeTab(tab: Tab) {

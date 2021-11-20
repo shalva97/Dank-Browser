@@ -53,4 +53,19 @@ class TabTests {
         assert((myTab.url.value as Tab.Url.Website).url == newWebsite)
 
     }
+
+    @Test
+    fun loadUrlIsBeingCalled() {
+        val taskList = getNewTaskList()
+
+        taskList.addTask("paperrrrrrrrrr")
+
+        val myTask = taskList.getTasks().first()
+        val myTab = myTask.tabsList.first()
+        val newWebsite = "https://waifu.pics"
+
+        myTab.saveUrl(newWebsite)
+
+
+    }
 }

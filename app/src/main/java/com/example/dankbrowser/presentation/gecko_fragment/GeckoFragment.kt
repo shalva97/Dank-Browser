@@ -2,6 +2,8 @@ package com.example.dankbrowser.presentation.gecko_fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,8 +33,8 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             viewModel.hideUrlBar()
         }
 
-        if (browserGV.session != viewModel.selectedTask.selectedTab.geckoSession) {
-            browserGV.setSession(viewModel.selectedTask.selectedTab.geckoSession)
+        if (browserGV.session != viewModel.selectedTab.geckoSession) {
+            browserGV.setSession(viewModel.selectedTab.geckoSession)
         }
 
         viewModel.urlBar.observe(viewLifecycleOwner) {
@@ -52,6 +54,17 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
         viewModel.pageTitle.observe(viewLifecycleOwner) {
             pageTitleTV.text = it
+        }
+
+        viewModel.isFullscreen.observe(viewLifecycleOwner) { isFullscreen ->
+            fullscreenGroup.isVisible = !isFullscreen
+            if (isFullscreen) {
+                WindowInsetsControllerCompat(activity?.window!!, root)
+                    .hide(WindowInsetsCompat.Type.systemBars())
+            } else {
+                WindowInsetsControllerCompat(activity?.window!!, root)
+                    .show(WindowInsetsCompat.Type.systemBars())
+            }
         }
     }
 }

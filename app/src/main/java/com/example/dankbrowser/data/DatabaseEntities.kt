@@ -8,6 +8,7 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.realmListOf
+import org.mozilla.geckoview.GeckoRuntime
 
 class TabEntity : RealmObject {
     var url: String = ""
@@ -16,10 +17,11 @@ class TabEntity : RealmObject {
 
     companion object {
 
-        fun TabEntity.toTab(realm: Realm): Tab {
+        fun TabEntity.toTab(realm: Realm, geckoRuntime: GeckoRuntime): Tab {
             return Tab(
                 originalObject = this,
-                realm = realm
+                realm = realm,
+                geckoRuntime = geckoRuntime
             )
         }
 
@@ -41,10 +43,10 @@ class TaskEntity : RealmObject {
 
     companion object {
 
-        fun TaskEntity.toTask(realm: Realm): Task {
+        fun TaskEntity.toTask(realm: Realm, geckoRuntime: GeckoRuntime): Task {
             return Task(name, contextId, originalObject = this).apply {
                 tabs.forEach { tabEntity ->
-                    addTab(tabEntity.toTab(realm))
+                    addTab(tabEntity.toTab(realm, geckoRuntime))
                 }
             }
         }

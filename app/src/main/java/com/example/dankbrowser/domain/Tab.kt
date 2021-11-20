@@ -5,15 +5,19 @@ import io.realm.Realm
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoSession
+import org.mozilla.geckoview.GeckoSessionSettings
 
-data class Tab(
+class Tab(
     private var originalObject: TabEntity,
-    private val realm: Realm
+    private val realm: Realm,
+    private val geckoRuntime: GeckoRuntime
 ) {
 
     val url: MutableStateFlow<Url> = MutableStateFlow(Url.Empty)
     val contextId: String
     val title = MutableStateFlow<String>("")
+    val isLoading = MutableStateFlow(false)
+    val isFullscreen = MutableStateFlow(false)
 
     init {
         if (originalObject.url.isNotEmpty()) {
@@ -24,14 +28,18 @@ data class Tab(
     }
 
     val geckoSession: GeckoSession by lazy {
-        GeckoSession()
+        val settings = GeckoSessionSettings.Builder().contextId(contextId).build()
+        GeckoSession(settings)
     }
 
-    fun loadWebsite(geckoRuntime: GeckoRuntime) {
+    fun initialize() {
         val url = url.value
         if (!geckoSession.isOpen && url is Url.Website) {
             geckoSession.open(geckoRuntime)
             geckoSession.loadUri(url.url)
+            geckoSession.navigationDelegate = navigationDelegate(::saveUrl)
+            geckoSession.progressDelegate = progressDelegate(isLoading::tryEmit)
+            geckoSession.contentDelegate = contentDelegate(::saveTitle, isFullscreen::tryEmit)
         }
     }
 
@@ -49,7 +57,7 @@ data class Tab(
         this.url.tryEmit(Url.Website(url))
     }
 
-    fun saveTitle(title: String) {
+    private fun saveTitle(title: String) {
         realm.writeBlocking {
             originalObject = findLatest(originalObject)?.apply {
                 this.title = title
@@ -61,5 +69,46 @@ data class Tab(
     sealed class Url {
         object Empty : Url()
         data class Website(val url: String) : Url()
+    }
+}
+
+private fun navigationDelegate(saveUrl: (String) -> Unit): GeckoSession.NavigationDelegate {
+    return object : GeckoSession.NavigationDelegate {
+        override fun onLocationChange(session: GeckoSession, url: String?) {
+            if (url != null) {
+                saveUrl(url)
+            }
+        }
+
+    }
+}
+
+private fun contentDelegate(
+    saveTitle: (String) -> Unit,
+    onFullScreen: (Boolean) -> Unit
+): GeckoSession.ContentDelegate {
+    return object : GeckoSession.ContentDelegate {
+        override fun onTitleChange(session: GeckoSession, title: String?) {
+            title?.let {
+                saveTitle(it)
+            }
+        }
+
+        override fun onFullScreen(session: GeckoSession, fullScreen: Boolean) {
+            onFullScreen(fullScreen)
+        }
+    }
+}
+
+private fun progressDelegate(isLoading: (Boolean) -> Unit): GeckoSession.ProgressDelegate {
+    return object : GeckoSession.ProgressDelegate {
+        override fun onPageStart(session: GeckoSession, url: String) {
+            isLoading(true)
+        }
+
+        override fun onPageStop(session: GeckoSession, success: Boolean) {
+            isLoading(false)
+        }
+
     }
 }

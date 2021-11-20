@@ -28,7 +28,7 @@ class Components(context: Context) {
     }
 
     private val realmDatabase by lazy {
-        TaskRepository(realm)
+        TaskRepository(realm, geckoEngine)
     }
 
     val taskList by lazy {
