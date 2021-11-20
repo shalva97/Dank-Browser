@@ -59,8 +59,11 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
         viewModel.isFullscreen.observe(viewLifecycleOwner) { isFullscreen ->
             fullscreenGroup.isVisible = !isFullscreen
             if (isFullscreen) {
-                WindowInsetsControllerCompat(activity?.window!!, root)
-                    .hide(WindowInsetsCompat.Type.systemBars())
+                WindowInsetsControllerCompat(activity?.window!!, root).apply {
+                    hide(WindowInsetsCompat.Type.systemBars())
+                    systemBarsBehavior =
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
             } else {
                 WindowInsetsControllerCompat(activity?.window!!, root)
                     .show(WindowInsetsCompat.Type.systemBars())
