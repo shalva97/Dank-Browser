@@ -6,12 +6,24 @@ import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoSession
 
 data class Tab(
-    val url: Url,
-    val contextId: String,
-    val title: String,
     private var originalObject: TabEntity,
     private val realm: Realm
 ) {
+
+    val url: Url
+    val contextId: String
+    val title: String
+
+    init {
+        url = if (originalObject.url.isEmpty()) {
+            Url.Empty
+        } else {
+            Url.Website(originalObject.url)
+        }
+        contextId = originalObject.contextId
+        title = originalObject.title
+    }
+
     val geckoSession: GeckoSession by lazy {
         GeckoSession()
     }
@@ -35,9 +47,9 @@ data class Tab(
 
         geckoSession.loadUri(url)
     }
-}
 
-sealed class Url {
-    object Empty : Url()
-    data class Website(val url: String) : Url()
+    sealed class Url {
+        object Empty : Url()
+        data class Website(val url: String) : Url()
+    }
 }

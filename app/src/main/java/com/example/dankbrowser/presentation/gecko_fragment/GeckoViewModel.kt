@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.dankbrowser.DankApplication
 import com.example.dankbrowser.components
+import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.TaskList
-import com.example.dankbrowser.domain.Url
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.GeckoSession
 
@@ -21,7 +21,7 @@ class GeckoViewModel(
     val loading = MutableLiveData<Boolean>()
 
     init {
-        if (selectedTask.selectedTab.url is Url.Empty) {
+        if (selectedTask.selectedTab.url is Tab.Url.Empty) {
             urlBar.postValue(true)
         } else {
             selectedTask.selectedTab.loadWebsite(geckoRuntime)

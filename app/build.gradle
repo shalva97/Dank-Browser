@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id "io.realm.kotlin" version "0.6.0"
+    id "io.realm.kotlin" version "0.7.0"
 }
 
 android {
@@ -38,7 +38,7 @@ android {
 
 ext {
     geckoviewChannel = "nightly"
-    geckoviewVersion = "96.0.20211114093049"
+    geckoviewVersion = "96.0.20211119093910"
     lifecycle_version = "2.4.0"
 }
 
@@ -60,7 +60,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
 
-    implementation("io.realm.kotlin:library-base:0.6.0")
+    implementation("io.realm.kotlin:library-base:0.7.0")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
