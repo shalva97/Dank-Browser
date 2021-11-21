@@ -4,6 +4,7 @@ import com.example.dankbrowser.data.TabEntity
 import io.realm.Realm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import mozilla.components.concept.engine.Engine
@@ -21,7 +22,7 @@ class Tab(
     val title = MutableStateFlow<String>("")
     val isLoading = MutableStateFlow(false)
     val isFullscreen = MutableStateFlow(false)
-    val prompts = MutableStateFlow<PromptRequest?>(null)
+    val prompts = MutableSharedFlow<PromptRequest>(extraBufferCapacity = 1)
     private var isInitialized = false
     val scope = CoroutineScope(Dispatchers.IO)
 
