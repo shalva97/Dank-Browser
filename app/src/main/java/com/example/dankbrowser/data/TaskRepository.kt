@@ -39,7 +39,7 @@ class TaskRepository(private val realm: Realm, private val geckoRuntime: Engine)
 
     fun removeTab(tab: Tab) {
         realm.writeBlocking {
-//            findLatest(tab.originalObject)?.delete() // TODO
+            findLatest(tab.originalObject)?.delete()
         }
     }
 }

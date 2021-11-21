@@ -4,6 +4,7 @@ import com.example.dankbrowser.data.TabEntity
 import io.realm.Realm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -12,7 +13,7 @@ import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.prompt.PromptRequest
 
 class Tab(
-    private var originalObject: TabEntity,
+    var originalObject: TabEntity,
     private val realm: Realm,
     private val engine: Engine,
 ) {
@@ -22,7 +23,10 @@ class Tab(
     val title = MutableStateFlow<String>("")
     val isLoading = MutableStateFlow(false)
     val isFullscreen = MutableStateFlow(false)
-    val prompts = MutableSharedFlow<PromptRequest>(extraBufferCapacity = 1)
+    val prompts = MutableSharedFlow<PromptRequest>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     private var isInitialized = false
     val scope = CoroutineScope(Dispatchers.IO)
 
@@ -42,33 +46,7 @@ class Tab(
         val url = url.value
         if (!isInitialized && url is Url.Website) {
             geckoEngineSession.loadUrl(url.url)
-            geckoEngineSession.register(object : EngineSession.Observer {
-                override fun onLocationChange(url: String) {
-                    scope.launch {
-                        saveUrl(url)
-                    }
-                }
-
-                override fun onProgress(progress: Int) {
-                    isLoading.tryEmit(progress < 100)
-                }
-
-                override fun onTitleChange(title: String) {
-                    scope.launch {
-                        saveTitle(title)
-                    }
-                }
-
-                override fun onFullScreenChange(enabled: Boolean) {
-                    isFullscreen.tryEmit(enabled)
-                }
-
-                override fun onPromptRequest(promptRequest: PromptRequest) {
-                    scope.launch {
-                        prompts.emit(promptRequest)
-                    }
-                }
-            })
+            geckoEngineSession.register(observer)
             isInitialized = true
         }
     }
@@ -94,6 +72,34 @@ class Tab(
             }!!
         }
         this.title.tryEmit(title)
+    }
+
+    private val observer = object : EngineSession.Observer {
+        override fun onLocationChange(url: String) {
+            scope.launch {
+                saveUrl(url)
+            }
+        }
+
+        override fun onProgress(progress: Int) {
+            isLoading.tryEmit(progress < 100)
+        }
+
+        override fun onTitleChange(title: String) {
+            scope.launch {
+                saveTitle(title)
+            }
+        }
+
+        override fun onFullScreenChange(enabled: Boolean) {
+            isFullscreen.tryEmit(enabled)
+        }
+
+        override fun onPromptRequest(promptRequest: PromptRequest) {
+            scope.launch {
+                prompts.emit(promptRequest)
+            }
+        }
     }
 
     sealed class Url {
