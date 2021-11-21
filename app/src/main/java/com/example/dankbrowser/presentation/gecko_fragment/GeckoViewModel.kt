@@ -22,6 +22,7 @@ class GeckoViewModel(
     val loading = selectedTab.isLoading.asLiveData(viewModelScope.coroutineContext)
     val pageTitle = selectedTab.title.asLiveData(viewModelScope.coroutineContext)
     val isFullscreen = selectedTab.isFullscreen.asLiveData(viewModelScope.coroutineContext)
+    val prompts = selectedTab.prompts.asLiveData(viewModelScope.coroutineContext)
 
     init {
         viewModelScope.launch {
@@ -37,7 +38,9 @@ class GeckoViewModel(
     }
 
     fun loadUrl(url: String) {
-        selectedTab.saveAndLoadUrl(url)
+        viewModelScope.launch {
+            selectedTab.saveAndLoadUrl(url)
+        }
     }
 
     fun hideUrlBar() {

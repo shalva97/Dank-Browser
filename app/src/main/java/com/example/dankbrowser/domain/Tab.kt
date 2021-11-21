@@ -2,22 +2,28 @@ package com.example.dankbrowser.domain
 
 import com.example.dankbrowser.data.TabEntity
 import io.realm.Realm
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.mozilla.geckoview.GeckoRuntime
-import org.mozilla.geckoview.GeckoSession
-import org.mozilla.geckoview.GeckoSessionSettings
+import kotlinx.coroutines.launch
+import mozilla.components.concept.engine.Engine
+import mozilla.components.concept.engine.EngineSession
+import mozilla.components.concept.engine.prompt.PromptRequest
 
 class Tab(
     private var originalObject: TabEntity,
     private val realm: Realm,
-    private val geckoRuntime: GeckoRuntime
+    private val engine: Engine,
 ) {
 
     val url: MutableStateFlow<Url> = MutableStateFlow(Url.Empty)
-    val contextId: String
+    private val contextId: String
     val title = MutableStateFlow<String>("")
     val isLoading = MutableStateFlow(false)
     val isFullscreen = MutableStateFlow(false)
+    val prompts = MutableStateFlow<PromptRequest?>(null)
+    private var isInitialized = false
+    val scope = CoroutineScope(Dispatchers.IO)
 
     init {
         if (originalObject.url.isNotEmpty()) {
@@ -27,47 +33,61 @@ class Tab(
         title.tryEmit(originalObject.title)
     }
 
-    val geckoSession: GeckoSession by lazy {
-        val settings = GeckoSessionSettings.Builder().contextId(contextId).build()
-        GeckoSession(settings)
+    val geckoEngineSession: EngineSession by lazy {
+        engine.createSession(contextId = contextId)
     }
 
     fun initialize() {
         val url = url.value
-        if (!geckoSession.isOpen && url is Url.Website) {
-            geckoSession.open(geckoRuntime)
-            geckoSession.loadUri(url.url)
-            geckoSession.navigationDelegate = navigationDelegate(::saveUrl)
-            geckoSession.progressDelegate = progressDelegate(isLoading::tryEmit)
-            geckoSession.contentDelegate = contentDelegate(::saveTitle, isFullscreen::tryEmit)
-            // TODO add onChoicePrompt
-//            geckoSession.promptDelegate =  object : GeckoSession.PromptDelegate {
-//                override fun onChoicePrompt(
-//                    session: GeckoSession,
-//                    prompt: GeckoSession.PromptDelegate.ChoicePrompt
-//                ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
-//                    return super.onChoicePrompt(session, prompt)
-//                }
-//            }
+        if (!isInitialized && url is Url.Website) {
+            geckoEngineSession.loadUrl(url.url)
+            geckoEngineSession.register(object : EngineSession.Observer {
+                override fun onLocationChange(url: String) {
+                    scope.launch {
+                        saveUrl(url)
+                    }
+                }
+
+                override fun onProgress(progress: Int) {
+                    isLoading.tryEmit(progress < 100)
+                }
+
+                override fun onTitleChange(title: String) {
+                    scope.launch {
+                        saveTitle(title)
+                    }
+                }
+
+                override fun onFullScreenChange(enabled: Boolean) {
+                    isFullscreen.tryEmit(enabled)
+                }
+
+                override fun onPromptRequest(promptRequest: PromptRequest) {
+                    scope.launch {
+                        prompts.emit(promptRequest)
+                    }
+                }
+            })
+            isInitialized = true
         }
     }
 
-    fun saveAndLoadUrl(url: String) {
+    suspend fun saveAndLoadUrl(url: String) {
         saveUrl(url)
-        geckoSession.loadUri(url)
+        geckoEngineSession.loadUrl(url)
     }
 
-    fun saveUrl(url: String) {
-        realm.writeBlocking {
+    suspend fun saveUrl(url: String) {
+        realm.write {
             originalObject = findLatest(originalObject)?.apply {
                 this.url = url
             }!!
         }
-        this.url.tryEmit(Url.Website(url))
+        this.url.emit(Url.Website(url))
     }
 
-    private fun saveTitle(title: String) {
-        realm.writeBlocking {
+    private suspend fun saveTitle(title: String) {
+        realm.write {
             originalObject = findLatest(originalObject)?.apply {
                 this.title = title
             }!!
@@ -78,46 +98,5 @@ class Tab(
     sealed class Url {
         object Empty : Url()
         data class Website(val url: String) : Url()
-    }
-}
-
-private fun navigationDelegate(saveUrl: (String) -> Unit): GeckoSession.NavigationDelegate {
-    return object : GeckoSession.NavigationDelegate {
-        override fun onLocationChange(session: GeckoSession, url: String?) {
-            if (url != null) {
-                saveUrl(url)
-            }
-        }
-
-    }
-}
-
-private fun contentDelegate(
-    saveTitle: (String) -> Unit,
-    onFullScreen: (Boolean) -> Unit
-): GeckoSession.ContentDelegate {
-    return object : GeckoSession.ContentDelegate {
-        override fun onTitleChange(session: GeckoSession, title: String?) {
-            title?.let {
-                saveTitle(it)
-            }
-        }
-
-        override fun onFullScreen(session: GeckoSession, fullScreen: Boolean) {
-            onFullScreen(fullScreen)
-        }
-    }
-}
-
-private fun progressDelegate(isLoading: (Boolean) -> Unit): GeckoSession.ProgressDelegate {
-    return object : GeckoSession.ProgressDelegate {
-        override fun onPageStart(session: GeckoSession, url: String) {
-            isLoading(true)
-        }
-
-        override fun onPageStop(session: GeckoSession, success: Boolean) {
-            isLoading(false)
-        }
-
     }
 }

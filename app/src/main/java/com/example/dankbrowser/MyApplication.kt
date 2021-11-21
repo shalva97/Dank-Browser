@@ -8,7 +8,9 @@ import com.example.dankbrowser.data.TaskRepository
 import com.example.dankbrowser.domain.TaskList
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.mozilla.geckoview.GeckoRuntime
+import mozilla.components.browser.engine.gecko.GeckoEngine
+import mozilla.components.browser.engine.system.SystemEngine
+import mozilla.components.concept.engine.Engine
 
 class DankApplication : Application() {
     val components by lazy {
@@ -18,8 +20,12 @@ class DankApplication : Application() {
 
 class Components(context: Context) {
 
-    val geckoEngine by lazy {
-        GeckoRuntime.create(context)
+    private val geckoEngine: Engine by lazy {
+        GeckoEngine(context)
+    }
+
+    private val webViewEngine: Engine by lazy {
+        SystemEngine(context)
     }
 
     private val realm by lazy {

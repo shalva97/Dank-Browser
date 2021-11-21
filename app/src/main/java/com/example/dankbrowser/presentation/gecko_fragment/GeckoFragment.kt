@@ -2,17 +2,23 @@ package com.example.dankbrowser.presentation.gecko_fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.dankbrowser.R
 import com.example.dankbrowser.databinding.FragmentGeckoBinding
+import com.example.dankbrowser.enterToImmersiveMode
+import com.example.dankbrowser.exitImmersiveModeIfNeeded
 import com.example.dankbrowser.hideKeyboard
+import com.example.dankbrowser.presentation.gecko_fragment.prompts.ChoiceDialogFragment
+import com.example.dankbrowser.presentation.gecko_fragment.prompts.ChoiceDialogFragment.Companion.MENU_CHOICE_DIALOG_TYPE
+import com.example.dankbrowser.presentation.gecko_fragment.prompts.ChoiceDialogFragment.Companion.MULTIPLE_CHOICE_DIALOG_TYPE
+import com.example.dankbrowser.presentation.gecko_fragment.prompts.ChoiceDialogFragment.Companion.SINGLE_CHOICE_DIALOG_TYPE
+import com.example.dankbrowser.presentation.gecko_fragment.prompts.Prompter
+import mozilla.components.concept.engine.prompt.Choice
+import mozilla.components.concept.engine.prompt.PromptRequest
+import mozilla.components.support.base.dialog.DeniedPermissionDialogFragment.Companion.FRAGMENT_TAG
+import java.io.InvalidClassException
 
 class GeckoFragment : Fragment(R.layout.fragment_gecko) {
 
@@ -33,18 +39,58 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
             viewModel.hideUrlBar()
         }
 
-        if (browserGV.session != viewModel.selectedTab.geckoSession) {
-            browserGV.setSession(viewModel.selectedTab.geckoSession)
-        }
+        browserGV.render(viewModel.selectedTab.geckoEngineSession)
 
         viewModel.urlBar.observe(viewLifecycleOwner) {
             urlBarEWC.isVisible = it
             hideKeyboard()
         }
 
-        lifecycleScope.launchWhenCreated {
-            repeatOnLifecycle(Lifecycle.State.DESTROYED) {
-                browserGV.releaseSession()
+        viewModel.prompts.observe(viewLifecycleOwner) {
+            it?.let { promptRequest: PromptRequest ->
+                val dialog = when (promptRequest) {
+                    is PromptRequest.SingleChoice -> {
+                        ChoiceDialogFragment.newInstance(
+                            promptRequest.choices,
+                            promptRequest.uid,
+                            true,
+                            SINGLE_CHOICE_DIALOG_TYPE
+                        )
+                    }
+
+                    is PromptRequest.MultipleChoice -> ChoiceDialogFragment.newInstance(
+                        promptRequest.choices,
+                        promptRequest.uid,
+                        true,
+                        MULTIPLE_CHOICE_DIALOG_TYPE
+                    )
+
+                    is PromptRequest.MenuChoice -> ChoiceDialogFragment.newInstance(
+                        promptRequest.choices,
+                        promptRequest.uid,
+                        true,
+                        MENU_CHOICE_DIALOG_TYPE
+                    )
+                    else -> throw InvalidClassException("asdf")
+                }
+
+                dialog.feature = object : Prompter {
+                    override fun onCancel(promptRequestUID: String, value: Any?) {
+
+                    }
+
+                    override fun onConfirm(promptRequestUID: String, value: Any?) {
+                        if (promptRequest is PromptRequest.SingleChoice) {
+                            promptRequest.onConfirm.invoke(value as Choice)
+                        }
+                    }
+
+                    override fun onClear(promptRequestUID: String) {
+                        TODO("Not yet implemented")
+                    }
+                }
+
+                dialog.show(requireFragmentManager(), FRAGMENT_TAG)
             }
         }
 
@@ -59,15 +105,14 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
         viewModel.isFullscreen.observe(viewLifecycleOwner) { isFullscreen ->
             fullscreenGroup.isVisible = !isFullscreen
             if (isFullscreen) {
-                WindowInsetsControllerCompat(activity?.window!!, root).apply {
-                    hide(WindowInsetsCompat.Type.systemBars())
-                    systemBarsBehavior =
-                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                }
+                requireActivity().enterToImmersiveMode()
             } else {
-                WindowInsetsControllerCompat(activity?.window!!, root)
-                    .show(WindowInsetsCompat.Type.systemBars())
+                requireActivity().exitImmersiveModeIfNeeded()
             }
         }
+    }
+
+    companion object {
+        private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2
     }
 }
