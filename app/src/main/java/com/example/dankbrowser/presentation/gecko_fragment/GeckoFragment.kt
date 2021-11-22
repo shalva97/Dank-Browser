@@ -112,6 +112,11 @@ class GeckoFragment : Fragment(R.layout.fragment_gecko) {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        requireActivity().exitImmersiveModeIfNeeded()
+    }
+
     companion object {
         private const val REQUEST_CODE_PROMPT_PERMISSIONS = 2
     }
