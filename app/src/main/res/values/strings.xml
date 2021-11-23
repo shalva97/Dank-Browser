@@ -15,4 +15,6 @@
     <string name="task_overflow_menu_delete">delete</string>
     <string name="context_name">context name</string>
     <string name="enter_url">Enter url</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

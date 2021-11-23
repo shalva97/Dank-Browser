@@ -33,10 +33,20 @@
         android:background="?attr/colorOnPrimary"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingEnd="25dp"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:elevation="2dp"
         tools:text="some random page title" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:padding="3dp"
+        android:src="@drawable/top_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/pageTitleTV"
+        app:layout_constraintEnd_toEndOf="@id/pageTitleTV"
+        app:layout_constraintTop_toTopOf="@id/pageTitleTV" />
 
     <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
         android:id="@+id/urlBarEWC"

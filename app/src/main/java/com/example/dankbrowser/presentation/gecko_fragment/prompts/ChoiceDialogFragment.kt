@@ -96,7 +96,6 @@ internal class ChoiceDialogFragment : PromptDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        feature?.onCancel(promptRequestUID)
     }
 
     private fun createSingleChoiceDialog(): AlertDialog {
@@ -105,9 +104,7 @@ internal class ChoiceDialogFragment : PromptDialogFragment() {
         val view = createDialogContentView(inflater)
 
         return builder.setView(view)
-            .setOnDismissListener {
-                feature?.onCancel(promptRequestUID)
-            }.create()
+            .setOnDismissListener {}.create()
     }
 
     private fun createMultipleChoiceDialog(): AlertDialog {
@@ -117,12 +114,10 @@ internal class ChoiceDialogFragment : PromptDialogFragment() {
 
         return builder.setView(view)
             .setNegativeButton(R.string.common_cancel) { _, _ ->
-                feature?.onCancel(promptRequestUID)
             }
             .setPositiveButton(R.string.common_ok) { _, _ ->
                 feature?.onConfirm(promptRequestUID, mapSelectChoice.keys.toTypedArray())
             }.setOnDismissListener {
-                feature?.onCancel(promptRequestUID)
             }.create()
     }
 }

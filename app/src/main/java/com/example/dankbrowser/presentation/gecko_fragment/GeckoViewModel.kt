@@ -43,6 +43,10 @@ class GeckoViewModel(
         }
     }
 
+    fun browserGoBack() {
+        selectedTab.geckoEngineSession.goBack()
+    }
+
     fun hideUrlBar() {
         urlBar.postValue(false)
     }
