@@ -9,6 +9,7 @@ import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.realmListOf
 import mozilla.components.concept.engine.Engine
+import java.util.*
 
 class TabEntity : RealmObject {
     var url: String = ""
@@ -25,10 +26,10 @@ class TabEntity : RealmObject {
             )
         }
 
-        fun emptyTab(): TabEntity {
+        fun emptyTab(contextId: String): TabEntity {
             return TabEntity().apply {
                 url = ""
-                contextId = "Default"
+                this.contextId = contextId
                 title = "Blank Tab"
             }
         }
@@ -54,8 +55,8 @@ class TaskEntity : RealmObject {
         fun emptyTask(): TaskEntity {
             return TaskEntity().apply {
                 name = "Untitled Task"
-                this.contextId = "Default"
-                tabs.add(emptyTab())
+                this.contextId = UUID.randomUUID().toString()
+                tabs.add(emptyTab(contextId))
             }
         }
     }

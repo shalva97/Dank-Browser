@@ -31,7 +31,7 @@ class TaskRepository(private val realm: Realm, private val geckoRuntime: Engine)
 
     fun addTab(task: Task): Tab {
         return realm.writeBlocking {
-            val tab = copyToRealm(TabEntity.emptyTab())
+            val tab = copyToRealm(TabEntity.emptyTab(task.contextId))
             findLatest(task.originalObject)?.tabs?.add(tab)
             copyToRealm(task.originalObject)
         }.toTask(realm, geckoRuntime).tabsList.last()
