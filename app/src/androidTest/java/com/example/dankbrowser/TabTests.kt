@@ -1,7 +1,7 @@
 package com.example.dankbrowser
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.dankbrowser.domain.Url
+import com.example.dankbrowser.domain.Tab
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -48,9 +48,24 @@ class TabTests {
         val myTab = myTask.tabsList.first()
         val newWebsite = "https://waifu.pics"
 
-        taskList.changeUrl(myTab, newWebsite, myTask)
+        myTab.saveUrl(newWebsite)
 
-        assert((myTask.tabsList.first().url as Url.Website).url == newWebsite)
+        assert((myTab.url.value as Tab.Url.Website).url == newWebsite)
+
+    }
+
+    @Test
+    fun loadUrlIsBeingCalled() {
+        val taskList = getNewTaskList()
+
+        taskList.addTask("paperrrrrrrrrr")
+
+        val myTask = taskList.getTasks().first()
+        val myTab = myTask.tabsList.first()
+        val newWebsite = "https://waifu.pics"
+
+        myTab.saveUrl(newWebsite)
+
 
     }
 }

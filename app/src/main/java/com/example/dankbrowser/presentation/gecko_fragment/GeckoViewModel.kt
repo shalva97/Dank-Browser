@@ -3,63 +3,48 @@ package com.example.dankbrowser.presentation.gecko_fragment
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.dankbrowser.DankApplication
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.dankbrowser.components
+import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.TaskList
-import com.example.dankbrowser.domain.Url
-import kotlinx.coroutines.flow.MutableSharedFlow
-import org.mozilla.geckoview.GeckoRuntime
-import org.mozilla.geckoview.GeckoSession
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class GeckoViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
     private val taskList: TaskList = components.taskList
-    private val geckoRuntime: GeckoRuntime = (application as DankApplication).components.geckoEngine
-    val selectedTask = taskList.selectedTask
+    val selectedTab = taskList.selectedTask.selectedTab
     val urlBar = MutableLiveData<Boolean>()
-    val loading = MutableSharedFlow<Boolean>(1, 1)
+    val loading = selectedTab.isLoading.asLiveData(viewModelScope.coroutineContext)
+    val pageTitle = selectedTab.title.asLiveData(viewModelScope.coroutineContext)
+    val isFullscreen = selectedTab.isFullscreen.asLiveData(viewModelScope.coroutineContext)
+    val prompts = selectedTab.prompts.asLiveData(viewModelScope.coroutineContext)
 
     init {
-        if (selectedTask.selectedTab.url is Url.Empty) {
-            urlBar.postValue(true)
-        } else {
-            selectedTask.selectedTab.loadWebsite(geckoRuntime)
-            selectedTask.selectedTab.geckoSession.navigationDelegate = navigationDelegate()
-            selectedTask.selectedTab.geckoSession.progressDelegate = progressDelegate()
-            hideUrlBar()
-        }
-    }
-
-    private fun navigationDelegate(): GeckoSession.NavigationDelegate {
-        return object : GeckoSession.NavigationDelegate {
-            override fun onLocationChange(session: GeckoSession, url: String?) {
-                if (url != null) {
-                    changeUrl(url)
+        viewModelScope.launch {
+            selectedTab.url.onEach {
+                if (selectedTab.url.value is Tab.Url.Empty) {
+                    urlBar.postValue(true)
+                } else {
+                    selectedTab.initialize()
+                    hideUrlBar()
                 }
-            }
-
+            }.launchIn(this)
         }
     }
 
-    private fun progressDelegate(): GeckoSession.ProgressDelegate {
-        return object : GeckoSession.ProgressDelegate {
-            override fun onPageStart(session: GeckoSession, url: String) {
-                super.onPageStart(session, url)
-                loading.tryEmit(true)
-            }
-
-            override fun onPageStop(session: GeckoSession, success: Boolean) {
-                super.onPageStop(session, success)
-                loading.tryEmit(false)
-            }
-
+    fun loadUrl(url: String) {
+        viewModelScope.launch {
+            selectedTab.saveAndLoadUrl(url)
         }
     }
 
-    fun changeUrl(url: String) {
-        taskList.changeUrl(selectedTask.selectedTab, url, selectedTask)
+    fun browserGoBack() {
+        selectedTab.geckoEngineSession.goBack()
     }
 
     fun hideUrlBar() {

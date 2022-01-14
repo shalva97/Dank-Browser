@@ -4,10 +4,12 @@ import com.example.dankbrowser.data.TabEntity.Companion.emptyTab
 import com.example.dankbrowser.data.TabEntity.Companion.toTab
 import com.example.dankbrowser.domain.Tab
 import com.example.dankbrowser.domain.Task
-import com.example.dankbrowser.domain.Url
+import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.realmListOf
+import mozilla.components.concept.engine.Engine
+import java.util.*
 
 class TabEntity : RealmObject {
     var url: String = ""
@@ -16,32 +18,18 @@ class TabEntity : RealmObject {
 
     companion object {
 
-        fun TabEntity.toTab(): Tab {
-            val tabUrl = if (url.isEmpty()) {
-                Url.Empty
-            } else {
-                Url.Website(url)
-            }
-            return Tab(url = tabUrl, contextId = contextId, title = title, originalObject = this)
+        fun TabEntity.toTab(realm: Realm, engine: Engine): Tab {
+            return Tab(
+                originalObject = this,
+                realm = realm,
+                engine = engine
+            )
         }
 
-        fun toEntity(tab: Tab): TabEntity {
-            return TabEntity().apply {
-                val tabEntityUrl = if (tab.url is Url.Website) {
-                    tab.url.url
-                } else {
-                    ""
-                }
-                url = tabEntityUrl
-                contextId = tab.contextId
-                title = tab.title
-            }
-        }
-
-        fun emptyTab(): TabEntity {
+        fun emptyTab(contextId: String): TabEntity {
             return TabEntity().apply {
                 url = ""
-                contextId = "Default"
+                this.contextId = contextId
                 title = "Blank Tab"
             }
         }
@@ -56,34 +44,19 @@ class TaskEntity : RealmObject {
 
     companion object {
 
-        fun TaskEntity.toTask(): Task {
+        fun TaskEntity.toTask(realm: Realm, geckoRuntime: Engine): Task {
             return Task(name, contextId, originalObject = this).apply {
                 tabs.forEach { tabEntity ->
-                    addTab(tabEntity.toTab())
+                    addTab(tabEntity.toTab(realm, geckoRuntime))
                 }
-            }
-        }
-
-        fun toEntity(task: Task): TaskEntity {
-            val items = task.tabsList.map {
-                TabEntity.toEntity(it)
-            }
-
-            val realmList = realmListOf<TabEntity>()
-            realmList.addAll(items)
-
-            return TaskEntity().apply {
-                name = task.name
-                contextId = task.contextId
-                tabs = task.tabsList.map { it.originalObject } as RealmList<TabEntity>
             }
         }
 
         fun emptyTask(): TaskEntity {
             return TaskEntity().apply {
                 name = "Untitled Task"
-                this.contextId = "Default"
-                tabs.add(emptyTab())
+                this.contextId = UUID.randomUUID().toString()
+                tabs.add(emptyTab(contextId))
             }
         }
     }

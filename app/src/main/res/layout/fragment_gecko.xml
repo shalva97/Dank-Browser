@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.gecko_fragment.GeckoFragment">
 
-    <org.mozilla.geckoview.GeckoView
+    <mozilla.components.browser.engine.gecko.GeckoEngineView
         android:id="@+id/browserGV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/pageTitleTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +26,28 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/pageTitleTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorOnPrimary"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingEnd="25dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:elevation="2dp"
+        tools:text="some random page title" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:padding="3dp"
+        android:src="@drawable/top_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/pageTitleTV"
+        app:layout_constraintEnd_toEndOf="@id/pageTitleTV"
+        app:layout_constraintTop_toTopOf="@id/pageTitleTV" />
+
     <com.example.dankbrowser.presentation.custom_views.EditTextFieldWithConfirmation
         android:id="@+id/urlBarEWC"
         android:layout_width="0dp"
@@ -35,5 +57,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/fullscreenGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="pageTitleTV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

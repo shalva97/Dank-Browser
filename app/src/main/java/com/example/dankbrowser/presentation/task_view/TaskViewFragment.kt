@@ -28,7 +28,7 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
     }
 
     private fun FragmentTaskViewBinding.init() {
-        val adapter = TaskViewAdapter()
+        val adapter = TaskViewAdapter(viewLifecycleOwner.lifecycleScope)
 
         adapter.taskList = viewModel.getTaskListDataForRV()
         taskViewListRV.adapter = adapter
@@ -87,6 +87,10 @@ class TaskViewFragment : Fragment(R.layout.fragment_task_view) {
 
                 viewModel.navigation.onEach {
                     findNavController().navigate(it)
+                }.launchIn(this)
+
+                adapter.renameTaskTapped.onEach {
+                    viewModel.renameTask(it, "somethingn else")
                 }.launchIn(this)
             }
         }

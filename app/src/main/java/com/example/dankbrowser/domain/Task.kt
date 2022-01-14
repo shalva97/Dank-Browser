@@ -10,4 +10,8 @@ data class Task(val name: String, val contextId: String, val originalObject: Tas
         tabsList.add(tab)
     }
 
+    fun changeName(name: String) {
+
+    }
+
 }

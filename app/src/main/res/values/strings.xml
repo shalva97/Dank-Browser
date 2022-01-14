@@ -6,6 +6,7 @@
     <string name="add_new_task">Add new task</string>
     <string name="common_add">Add</string>
     <string name="common_cancel">Cancel</string>
+    <string name="common_ok">OK</string>
     <string name="common_untitled">Untitled</string>
     <string name="delete">Delete</string>
     <string name="delete_task_dialog_title">Are you sure you want to delete \"%s\" task</string>
@@ -14,4 +15,6 @@
     <string name="task_overflow_menu_delete">delete</string>
     <string name="context_name">context name</string>
     <string name="enter_url">Enter url</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
