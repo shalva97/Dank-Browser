@@ -54,6 +54,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="addTaskBTN,addTaskATV " />
+        app:constraint_referenced_ids="addTaskBTN " />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
